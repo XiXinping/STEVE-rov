@@ -15,7 +15,7 @@ async def hello(uri):
 
 
 async def main():
-    task = asyncio.ensure_future(hello("ws://localhost:8765"))
+    task = asyncio.ensure_future(hello("ws://localhost:1234"))
     await asyncio.gather(task)
 
 
