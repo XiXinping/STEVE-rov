@@ -9,8 +9,9 @@
                 messages = document.createElement('ul');
             ws.onmessage = function (event) {
                 var messages = document.getElementsByTagName('ul')[0],
+                    data = JSON.parse(event.data)
                     message = document.createElement('li'),
-                    content = document.createTextNode(event.data);
+                    content = document.createTextNode(json.loads(data));
                 message.appendChild(content);
                 messages.appendChild(message);
             };
