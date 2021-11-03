@@ -2,12 +2,19 @@ import asyncio
 import websockets
 import json
 
+clients = set()  # creates a set of all the websocket clients
+
 
 async def receive_data(websocket, path):
     # receives data from websocket client
-    async for message in websocket:
-        joystick_data = json.loads(message)  # loads joystick data into dictionary
-        print(joystick_data)
+    try:
+        clients.add(websocket)
+        async for message in websocket:
+            joystick_data = json.loads(message)  # loads joystick data into dictionary
+            print(joystick_data)
+            websockets.broadcast(clients, message)  # sends the data to all clients
+    finally:
+        clients.remove(websocket)
 
 
 async def main():
