@@ -5,13 +5,14 @@
     </head>
     <body>
         <script>
-            var ws = new WebSocket("ws://127.0.0.1:1234/"),
-                messages = document.createElement('ul');
+            var ws = new WebSocket("ws://127.0.0.1:1234/");
+            var messages = document.createElement('ul');
             ws.onmessage = function (event) {
-                var messages = document.getElementsByTagName('ul')[0],
-                    data = JSON.parse(event.data)
-                    message = document.createElement('li'),
-                    content = document.createTextNode(json.loads(data));
+                var messages = document.getElementsByTagName('ul')[0];
+                var message = document.createElement('li');
+                var data = event.data
+                var content = document.createTextNode(event.data);
+                console.log(data);
                 message.appendChild(content);
                 messages.appendChild(message);
             };
