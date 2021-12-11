@@ -1,8 +1,8 @@
-# Welcome to PyShine
-
-# This code is for the server 
-# Lets import the libraries
-import socket, cv2, pickle,struct,imutils
+import socket
+import cv2
+import pickle
+import struct
+import imutils
 
 # Socket Create
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
