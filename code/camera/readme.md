@@ -4,7 +4,7 @@ It is 2 python files, one being for the server (RPI Abord ROV) and one for the c
 
 # How It Runs and Jankyness Level
 
-It uses websockets, and most of the code was found on the internet. From what I understand it pickles each frame, then sends it in a packet preceded by "Q" and the length of the tuple. It is quite fragile and extremely janky.
+It uses sockets, and most of the code was found on the internet. From what I understand it pickles each frame, then sends it in a packet preceded by "Q" and the length of the tuple. It is quite fragile and extremely janky.
 
 # Networking Required for it to Functon. 
 
