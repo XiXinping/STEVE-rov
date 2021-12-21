@@ -25,8 +25,12 @@ String line = "";
 void loop() {                                      
     if (Serial.available() > 0) {                  
         line = Serial.readStringUntil('\n');
-        if(line) {
+        int command = line.toInt();
+        if(command == 0) {
             flash_led();
+        }
+        if(command == 1) {
+            Serial.println("Echo!");
         }
         line = "";
     }

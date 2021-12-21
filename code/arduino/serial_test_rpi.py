@@ -1,13 +1,28 @@
 import serial
 import time
 
-count = 0;
-ser = serial.Serial('/dev/ttyACM1', 9600, timeout=1)
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 ser.reset_input_buffer()
 
-while True:
-    count += 1
-    cnum = str(count) + '\n'
-#    ser.write("6\n".encode('ascii'))
-    ser.write(cnum.encode('ascii'))
-    time.sleep(2)
+def main():
+    time.sleep(2)  # give the arduino a couple of seconds to set up serial
+    while True:
+        command_input = input("Command to Send: ")
+        if command_input.lower() == "flash":
+            command = "0"
+        elif command_input.lower() == "echo":
+            command = "1"
+        else:
+            print("Invalid Command")
+            return
+        send_data = command + '\n'
+        ser.write(send_data.encode('ascii'))
+      
+        receive_line = ser.readline();
+        print(receive_line.decode('ascii'))
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('')
