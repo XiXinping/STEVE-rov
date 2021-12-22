@@ -1,5 +1,12 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/code/arduino/json_test_arduino/json_test_arduino.ino"
 #include <ArduinoJson.h>
 
+#line 3 "/home/pi/underwater-rov/code/arduino/json_test_arduino/json_test_arduino.ino"
+void setup();
+#line 31 "/home/pi/underwater-rov/code/arduino/json_test_arduino/json_test_arduino.ino"
+void loop();
+#line 3 "/home/pi/underwater-rov/code/arduino/json_test_arduino/json_test_arduino.ino"
 void setup() {
     Serial.begin(9600);
     
@@ -31,3 +38,4 @@ void setup() {
 void loop() {
     
 }
+
