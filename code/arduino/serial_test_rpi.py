@@ -12,15 +12,18 @@ def main():
             command = "0"
         elif command_input.lower() == "echo":
             command = "1"
+        elif command_input.lower() == "exit":
+            command = "2"
         else:
             print("Invalid Command")
-            return
+            command = "-1"
         send_data = command + '\n'
         ser.write(send_data.encode('ascii'))
       
-        receive_line = ser.readline();
+        receive_line = ser.readline()
         print(receive_line.decode('ascii'))
-
+        if command == "2":
+            return
 if __name__ == '__main__':
     try:
         main()

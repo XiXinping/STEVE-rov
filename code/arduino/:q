@@ -26,13 +26,11 @@ void loop() {
         const char* command = document["command"];                                  
         float x_coord = document["coordinates"][0];  // you can extract nested values
         float y_coord = document["coordinates"][1];                             
-        // short coordinate = document["coordinates"];
-
+        
         Serial.println(receive_joystick_data);
         Serial.println(command);                                                    
         Serial.println(x_coord);
         Serial.println(y_coord);
-        //Serial.println(coordinate);
         receive_joystick_data = "";
         delay(100);
     }

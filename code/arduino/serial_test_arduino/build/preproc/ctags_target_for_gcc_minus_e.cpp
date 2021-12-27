@@ -3,12 +3,14 @@ void setup() {
     Serial.begin(9600);
     pinMode(8, 0x1);
     digitalWrite(8, 0x0);
+    pinMode(9, 0x1);
+    digitalWrite(9, 0x0);
 }
 
-void flash_led() {
-    digitalWrite(8, 0x1);
+void flash_led(int pin_num) {
+    digitalWrite(pin_num, 0x1);
     delay(500);
-    digitalWrite(8, 0x0);
+    digitalWrite(pin_num, 0x0);
 }
 
 int cnt;
@@ -17,11 +19,18 @@ String line = "";
 void loop() {
     if (Serial.available() > 0) {
         line = Serial.readStringUntil('\n');
+        if(line == "-1") {
+            ;
+        }
         if(line == "0") {
-            flash_led();
+            flash_led(8);
         }
         if(line == "1") {
             Serial.println("Echo!");
+        }
+        if(line == "2") {
+            Serial.println("Exiting!");
+            Serial.end();
         }
         line = "";
     }
