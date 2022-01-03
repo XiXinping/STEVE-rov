@@ -4,6 +4,7 @@ import time
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 ser.reset_input_buffer()
 
+
 def main():
     time.sleep(2)  # give the arduino a couple of seconds to set up serial
     while True:
@@ -19,11 +20,13 @@ def main():
             command = "-1"
         send_data = command + '\n'
         ser.write(send_data.encode('ascii'))
-      
+
         receive_line = ser.readline()
         print(receive_line.decode('ascii'))
         if command == "2":
             return
+
+
 if __name__ == '__main__':
     try:
         main()
