@@ -11,14 +11,18 @@ async def main():
     # initializing the joystick
     joystick = pygame.joystick.Joystick(0)
     # websockets uri
-    uri = "ws://10.0.0.101:1234"
+    uri = "ws://192.168.0.101:1234"
     # main event loop
     while True:
-        pygame.event.pump()  # updates the pygame event loop to check for new changes
-        button_values = [joystick.get_button(i) for i in range(joystick.get_numbuttons())]
-        axes_coordinates = [joystick.get_axis(i) for i in range(joystick.get_numaxes())]
-        dpad_coordinates = joystick.get_hat(0)
-        joystick_data = {"button_values": button_values, "axes_coordinates": axes_coordinates, "dpad_coordinates": dpad_coordinates}
+        # updates the pygame event loop to check for new changes
+        pygame.event.pump()
+        button_values = [joystick.get_button(i) for i in
+                         range(joystick.get_numbuttons())]
+        axes_coords = [joystick.get_axis(i) for i in
+                       range(joystick.get_numaxes())]
+        dpad_coords = joystick.get_hat(0)
+        joystick_data = {"button_values": button_values, "axes_coords":
+                         axes_coords, "dpad_coords": dpad_coords}
         print(joystick_data)
         async with websockets.connect(uri) as websocket:
             # converts dictionary into json and sends it to server
