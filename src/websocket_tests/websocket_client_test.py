@@ -8,4 +8,4 @@ async def hello(uri):
         msg = await websocket.recv()
         print(msg)
 
-asyncio.run(hello("ws://192.168.0.103:8765"))
+asyncio.run(hello("ws://192.168.0.101:8765"))
