@@ -1,5 +1,5 @@
-# 1 "/home/pi/underwater-rov/code/arduino/json_test_arduino/json_test_arduino.ino"
-# 2 "/home/pi/underwater-rov/code/arduino/json_test_arduino/json_test_arduino.ino" 2
+# 1 "/home/pi/underwater-rov/src/joystick_to_arduino/example_test_files/json_test_arduino/json_test_arduino.ino"
+# 2 "/home/pi/underwater-rov/src/joystick_to_arduino/example_test_files/json_test_arduino/json_test_arduino.ino" 2
 
 void setup() {
     Serial.begin(9600);
@@ -14,7 +14,7 @@ void loop() {
         // const char* input = "{\"command\": \"echo\", \"coordinates\": [0.99, 0.42]}";
 
         // creates a json document on the stack                                     
-        StaticJsonDocument<64> document;
+        StaticJsonDocument<256> document;
 
         // deserializeJson() doesn't throw errors, rather they can be collected in this variable of the the type DeserializationError
         DeserializationError err = deserializeJson(document, receive_joystick_data);
@@ -24,15 +24,15 @@ void loop() {
             return;
         }
         // parses data from the json document and stores them as variables          
-        const char* command = document["command"];
-        float x_coord = document["coordinates"][0]; // you can extract nested values
-        float y_coord = document["coordinates"][1];
+        const int[12] button_values = document["command"];
+        //float x_coord = document["coordinates"][0];  // you can extract nested values
+        //float y_coord = document["coordinates"][1];                             
         // short coordinate = document["coordinates"];
 
         Serial.println(receive_joystick_data);
-        Serial.println(command);
-        Serial.println(x_coord);
-        Serial.println(y_coord);
+        Serial.println(button_values);
+        //Serial.println(x_coord);
+        //Serial.println(y_coord);
         //Serial.println(coordinate);
         receive_joystick_data = "";
         delay(100);

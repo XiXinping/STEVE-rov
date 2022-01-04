@@ -1,6 +1,6 @@
 [
  {
-  "directory": "/home/pi/underwater-rov/code/arduino",
+  "directory": "/home/pi/underwater-rov/src/websocket_tests",
   "arguments": [
    "/home/pi/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
    "-c",
@@ -24,10 +24,10 @@
    "-I/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/cores/arduino",
    "-I/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/variants/standard",
    "-I/home/pi/Arduino/libraries/ArduinoJson/src",
-   "/home/pi/underwater-rov/code/arduino/json_test_arduino/build/sketch/json_test_arduino.ino.cpp",
+   "/home/pi/underwater-rov/src/joystick_to_arduino/example_test_files/json_test_arduino/build/sketch/json_test_arduino.ino.cpp",
    "-o",
-   "/home/pi/underwater-rov/code/arduino/json_test_arduino/build/sketch/json_test_arduino.ino.cpp.o"
+   "/home/pi/underwater-rov/src/joystick_to_arduino/example_test_files/json_test_arduino/build/sketch/json_test_arduino.ino.cpp.o"
   ],
-  "file": "/home/pi/underwater-rov/code/arduino/json_test_arduino/build/sketch/json_test_arduino.ino.cpp"
+  "file": "/home/pi/underwater-rov/src/joystick_to_arduino/example_test_files/json_test_arduino/build/sketch/json_test_arduino.ino.cpp"
  }
 ]
