@@ -1,5 +1,14 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
 #include <ArduinoJson.h>
 
+#line 3 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
+void setup();
+#line 11 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
+void flash(uint8_t pin_number);
+#line 17 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
+void loop();
+#line 3 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
 void setup() {
     Serial.begin(9600);
     pinMode(8, OUTPUT);
@@ -42,3 +51,4 @@ void loop() {
         delay(100);
     }
 }
+

@@ -8,11 +8,13 @@ ser.reset_input_buffer()
 
 async def receive_data(websocket, path):
     # receives data from websocket client
-    async for message in websocket:
-        joystick_data_print = json.loads(message)
-        print(joystick_data_print)
-        joystick_data_send = message + '\n' # message is already in json format
-        ser.write(joystick_data_send.encode('ascii')) 
+    async for joystick_data in websocket:
+        if joystick_data["button_values"][0] == 1:
+            arduino_command = {"command": "flash", "data": 8}
+        elif joystick_data["button_values"][1] == 2:
+            arduino_command = {"command": "flash", "data": 9}
+        
+        ser.write(arduino_command.encode('ascii'))
 
         receive_line = ser.readline()
         print("Arduino Response: " + receive_line.decode('ascii'))
