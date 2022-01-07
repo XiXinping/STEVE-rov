@@ -117,7 +117,8 @@ If a language is used in the project extensively, please add conventions to the 
 
 * HTML
 * JavaScript
-* C
+* CSS
+* C/Arduino/C++
 * Python
 * Perl
 * Makefile
