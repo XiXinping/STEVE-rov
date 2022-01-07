@@ -115,6 +115,10 @@ Try to keep your code readable, if there are standard conventions for you langua
 
 If a language is used in the project extensively, please add conventions to the README
 
+### Languages That Will Likely Be Used
+
+Please add any new language that you will be using.
+
 * HTML
 * JavaScript
 * CSS
