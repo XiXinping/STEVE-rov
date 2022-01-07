@@ -1,4 +1,4 @@
-# Underwater ROV
+#  Underwater ROV
 
 Code and Documentation for the MVTHS MATE Robotics Team 2021/2022
 
@@ -16,8 +16,8 @@ What programming conventions should be used for different programming languages.
 
 * [General](##General)
 * [C/C++/Arduino](##C/C++/Arduino)
-* [Python](## Python)
-* [Other Languages](#Other Languages)
+* [Python](##Python)
+* [Other Languages](##Other Languages)
 
 ## General
 
@@ -92,7 +92,7 @@ Use spaces instead of tabs, most IDEs will convert tabs to spaces automatically.
 
 ### Functions 
 
-Functions should be small and [portable](portable). 
+Functions should be small and portable. 
 
 ```
 def function:
