@@ -14,10 +14,10 @@ Robot will use Flask web server. Server directory is under RPIwebserver. Flask c
 
 What programming conventions should be used for different programming languages.
 
-[General](##General)
-[C/C++/Arduino](##C/C++/Arduino)
-[Python](## Python)
-[Other Languages](#Other Languages)
+* [General](##General)
+* [C/C++/Arduino](##C/C++/Arduino)
+* [Python](## Python)
+* [Other Languages](#Other Languages)
 
 ## General
 
@@ -105,3 +105,20 @@ def function:
 if something == true:
     # do stuff
 ```
+
+## Other Languages
+
+Try to avoid using superfluous languages, for instnace don't write something in Java when it would make just as much sense to write it in Python to try to keep some continuity. 
+Try to keep your code readable, if there are standard conventions for you language use those, and comment what is happening in your code even more, as contributers may not know that language.
+The languages that we will likely be using are 
+
+If a language is used in the project extensively, please add conventions to the README
+
+* HTML
+* JavaScript
+* C
+* Python
+* Perl
+* Makefile
+* Bash
+
