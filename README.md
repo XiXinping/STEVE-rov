@@ -21,10 +21,11 @@ What programming conventions should be used for different programming languages.
 
 ## General
 
-COMMENT, COMMENT, COMMENT!
+**COMMENT, COMMENT, COMMENT!**
+
 We get points for documentation, therefor the more comments you make the better (within reason)
 
-Update READMEs in the directory that you are working on if what you have worked on changes the scope, or directions on running the code.
+Update READMEs in the respective directories of a commit, if your commit changes the scope, or how to run that section of code
 
 The conventions that we will be using for different languages, are just that conventions. Only follow them when it makes sense, if breaking the convention will make your code more readable, do it.
 
