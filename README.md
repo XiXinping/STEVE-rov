@@ -23,21 +23,23 @@ What programming conventions should be used for different programming languages.
 
 **COMMENT, COMMENT, COMMENT!**
 
-We get points for documentation, therefor the more comments you make the better (within reason)
+We get points for documentation, therefore, the more comments you make the better (within reason, of course)
+With that said, make sure your comments are actually correct
+Wrong or misleading comments are worse than no comments
 
-Update READMEs in the respective directories of a commit, if your commit changes the scope, or how to run that section of code
+Update READMEs in the respective directories of a commit if your commit changes the scope, or how to run that section of code
 
 The conventions that we will be using for different languages, are just that conventions. Only follow them when it makes sense, if breaking the convention will make your code more readable, do it.
 
 ## C/C++/Arduino
 
 We will be using the [Google C++ style guide](https://google.github.io/styleguide/cppguide.html)
-you can use cpplint to check if you are following the conventions.
+You can use cpplint to check if you are following the conventions.
 
 cpplint can be installed with
 `pip3 install cpplint`
 
-The gist of it is to keep your lines under 80 characters, use snake case for variable names, and to use the following syntax for functions, if statements, and switch statements.
+The gist of it is to keep your lines under 80 characters, use snake_case for variable names, and to use the following syntax for functions, if statements, and switch statements.
 
 
 ### Functions
@@ -45,8 +47,8 @@ The gist of it is to keep your lines under 80 characters, use snake case for var
 Functions should be very small, so that it can be portable to other files.
 
 ```
-int function() {
-    //stuff here
+int some_function() {
+    // stuff here
 }
 ```
 
