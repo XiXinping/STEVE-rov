@@ -24,8 +24,8 @@ What programming conventions should be used for different programming languages.
 **COMMENT, COMMENT, COMMENT!**
 
 We get points for documentation, therefore, the more comments you make the better (within reason, of course)
-With that said, make sure your comments are actually correct
-Wrong or misleading comments are worse than no comments
+
+With that said, make sure your comments are actually correct. Wrong or misleading comments are worse than no comments
 
 Update READMEs in the respective directories of a commit if your commit changes the scope, or how to run that section of code
 
