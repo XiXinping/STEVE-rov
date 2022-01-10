@@ -6,6 +6,7 @@ import serial
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
 ser.reset_input_buffer()
 
+
 async def receive_data(websocket, path):
     # receives data from websocket client
     async for joystick_data in websocket:
@@ -18,6 +19,7 @@ async def receive_data(websocket, path):
 
         receive_line = ser.readline()
         print("Arduino Response: " + receive_line.decode('ascii'))
+
 
 async def main():
     print('Server Started!')
