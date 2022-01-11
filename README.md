@@ -17,7 +17,7 @@ What programming conventions should be used for different programming languages.
 * [General](##General)
 * [C/C++/Arduino](##C/C++/Arduino)
 * [Python](##Python)
-* [Other Languages](##Other\ Languages)
+* [Other Languages](##Other_Languages)
 
 ## General
 
@@ -109,7 +109,7 @@ if something == true:
     # do stuff
 ```
 
-## Other Languages
+## Other_Languages
 
 Try to avoid using superfluous languages, for instance don't write something in Java when it would make just as much sense to write it in Python.
 
