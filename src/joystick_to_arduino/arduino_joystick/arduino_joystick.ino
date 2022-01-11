@@ -39,7 +39,7 @@ void loop() {
         if(!strcmp(command, "flash_on")) {
             digitalWrite(8, HIGH);
         }
-        if(strcmp(command, "flash_off") == 0) {
+        if(!strcmp(command, "flash_off")) {
             digitalWrite(8, LOW);
         }
         receive_joystick_data = "";
