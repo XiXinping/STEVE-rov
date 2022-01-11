@@ -17,7 +17,7 @@ What programming conventions should be used for different programming languages.
 * [General](##General)
 * [C/C++/Arduino](##C/C++/Arduino)
 * [Python](##Python)
-* [Other Languages](##Other Languages)
+* [Other Languages](##Other\ Languages)
 
 ## General
 
