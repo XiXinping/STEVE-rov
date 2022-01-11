@@ -31,7 +31,9 @@ Update READMEs in the respective directories of a commit if your commit changes 
 
 The conventions that we will be using for different languages, are just that conventions. Only follow them when it makes sense, if breaking the convention will make your code more readable, do it.
 
-## C/C++/Arduino
+## Styling Guidelines
+
+### C/C++/Arduino
 
 We will be using the [Google C++ style guide](https://google.github.io/styleguide/cppguide.html)
 You can use cpplint to check if you are following the conventions.
@@ -42,7 +44,7 @@ cpplint can be installed with
 The gist of it is to keep your lines under 80 characters, use snake_case for variable names, and to use the following syntax for functions, if statements, and switch statements.
 
 
-### Functions
+#### Functions
 
 Functions should be very small, so that it can be portable to other files.
 
@@ -52,7 +54,7 @@ int some_function() {
 }
 ```
 
-### If Statements
+#### If Statements
 ```
 if (condition) {                   // no spaces inside parentheses, space before brace
   DoOneThing();                    // two space indent
@@ -64,7 +66,7 @@ if (condition) {                   // no spaces inside parentheses, space before
 }   
 ```
 
-### Switch Statements
+#### Switch Statements
 
 ```
 switch (var) {
@@ -82,7 +84,7 @@ switch (var) {
 }
 ```
 
-## Python
+### Python
 
 We will be using the [PEP8 standard styleguide for python](https://www.python.org/dev/peps/pep-0008/)
 PEP8 is likely how you learned how to write python, so it should come naturally.
@@ -93,7 +95,7 @@ You can use the PEP8 linter that can be installed with
 Use snake case for variable naming, and try to keep your code clean and portable.
 Use spaces instead of tabs, most IDEs will convert tabs to spaces automatically. 
 
-### Functions 
+#### Functions 
 
 Functions should be small and portable. 
 
@@ -102,14 +104,14 @@ def function:
     # Do stuff
 ```
 
-### If Statements
+#### If Statements
 
 ```
 if something == true:
     # do stuff
 ```
 
-## Other_Languages
+### Other Languages
 
 Try to avoid using superfluous languages, for instance don't write something in Java when it would make just as much sense to write it in Python.
 
