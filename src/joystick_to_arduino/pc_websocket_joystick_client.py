@@ -11,7 +11,7 @@ async def main():
     # initializing the joystick
     joystick = pygame.joystick.Joystick(0)
     # websockets uri
-    uri = "ws://192.168.0.101:1234"
+    uri = "ws://192.168.0.101:8765"
     # main event loop
     while True:
         # updates the pygame event loop to check for new changes
@@ -27,7 +27,7 @@ async def main():
         async with websockets.connect(uri) as websocket:
             # converts dictionary into json and sends it to server
             await websocket.send(json.dumps(joystick_data))
-        await asyncio.sleep(1 / 60)
+        await asyncio.sleep(0.1)
 
 
 if __name__ == '__main__':
