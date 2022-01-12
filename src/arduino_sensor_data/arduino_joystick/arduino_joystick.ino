@@ -1,15 +1,6 @@
-#include <Arduino.h>
-#line 1 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
 #include <ArduinoJson.h>
 #include <string.h>
 
-#line 4 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
-void setup();
-#line 12 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
-void flash(uint8_t pin_number);
-#line 17 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
-void loop();
-#line 4 "/home/pi/underwater-rov/src/joystick_to_arduino/arduino_joystick/arduino_joystick.ino"
 void setup() {
     Serial.begin(9600);
     pinMode(8, OUTPUT);
@@ -42,14 +33,15 @@ void loop() {
         const char* command = doc["command"];                                  
         const uint8_t data = doc["data"];
         
-        // does a string comparison to see if the command is "flash_on"
+        /* does a string comparison to see if the command is "flash_on",
+           because strcmp() returns a 0 if the strings are the same, we can use
+           the ! operator instead of checking if strcmp() == 0 */
         if(!strcmp(command, "flash_on")) {
             digitalWrite(8, HIGH);
         }
-        if(strcmp(command, "flash_off") == 0) {
+        if(!strcmp(command, "flash_off")) {
             digitalWrite(8, LOW);
         }
         receive_joystick_data = "";
     }
 }
-
