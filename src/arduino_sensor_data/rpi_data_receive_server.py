@@ -1,5 +1,4 @@
 import asyncio
-import websockets
 import json
 import serial
 
@@ -12,6 +11,7 @@ def receive_sensor_data():
     if sensor_data_string:
         sensor_data = json.loads(sensor_data_string)
         return sensor_data
+
 
 async def main():
     print('Server Started!')
