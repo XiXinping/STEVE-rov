@@ -4,11 +4,13 @@ Code and Documentation for the MVTHS MATE Robotics Team 2021/2022
 
 ## Basic Client Server 
 
-The Client Server will use the 
+Websockets are the primary method of communication between different processes. More information about websockets can be found [here](https://websockets.readthedocs.io/en/stable/).
+
+The Raspberry Pi will host a main websocket server that receives joystick data from a PC, receives camera data, sends commands to an arduino, and sends data to a web client.
 
 ## Basic Web Server
 
-Robot will use Flask web server. Server directory is under RPIwebserver. Flask code will be in the helloworld.py file. HTML templates will be in the templates directory. There will only be HTML. Data from the RPI will go into the HTML file, any item inside {{}} refers to data from the RPI. 
+The main server hosted on the pi can be used as a web server. A web client will connect to the server and display sensor data and a live camera feed.
 
 # Commiting Guide
 
