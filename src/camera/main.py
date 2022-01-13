@@ -15,14 +15,21 @@ import pygame.image
 
 parser = argparse.ArgumentParser(description='Start the PyImageStream server.')
 
-parser.add_argument('--port', default=8888, type=int, help='Web server port (default: 8888)')
-parser.add_argument('--camera', default=0, type=int, help='Camera index, first camera is 0 (default: 0)')
-parser.add_argument('--width', default=640, type=int, help='Width (default: 640)')
-parser.add_argument('--height', default=480, type=int, help='Height (default: 480)')
-parser.add_argument('--quality', default=70, type=int, help='JPEG Quality 1 (worst) to 100 (best) (default: 70)')
-parser.add_argument('--stopdelay', default=7, type=int, help='Delay in seconds before the camera will be stopped after '
-                                                             'all clients have disconnected (default: 7)')
+parser.add_argument('--port', default=8888, type=int, help='''Web server port
+                    (default: 8888)''')
+parser.add_argument('--camera', default=0, type=int,
+                    help='Camera index, first camera is 0 (default: 0)')
+parser.add_argument('--width', default=640, type=int,
+                    help='Width (default: 640)')
+parser.add_argument('--height', default=480, type=int,
+                    help='Height (default: 480)')
+parser.add_argument('--quality', default=70, type=int,
+                    help='JPEG Quality 1 (worst) to 100 (best) (default: 70)')
+parser.add_argument('--stopdelay', default=7, type=int, help='''Delay in seconds
+                    before the camera will be stopped after all clients have
+                    disconnected(default: 7)''')
 args = parser.parse_args()
+
 
 class Camera:
 
@@ -48,7 +55,8 @@ class Camera:
         if self.is_started and not self.stop_requested:
             self.stop_requested = True
             print("Stopping camera in " + str(self.stopdelay) + " seconds...")
-            tornado.ioloop.IOLoop.current().call_later(self.stopdelay, self._stop)
+            tornado.ioloop.IOLoop.current().call_later(self.stopdelay,
+                                                       self._stop)
 
     def _start(self):
         print("Starting camera...")
@@ -73,7 +81,8 @@ class Camera:
             return bytesIO.getvalue()
 
 
-camera = Camera(args.camera, args.width, args.height, args.quality, args.stopdelay)
+camera = Camera(args.camera, args.width, args.height,
+                args.quality, args.stopdelay)
 
 
 class ImageWebSocket(tornado.websocket.WebSocketHandler):
@@ -103,9 +112,10 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 static_path = script_path + '/static/'
 
 app = tornado.web.Application([
-        (r"/websocket", ImageWebSocket),
-        (r"/(.*)", tornado.web.StaticFileHandler, {'path': static_path, 'default_filename': 'index.html'}),
-    ])
+    (r"/websocket", ImageWebSocket),
+    (r"/(.*)", tornado.web.StaticFileHandler,
+     {'path': static_path, 'default_filename': 'index.html'}),
+])
 app.listen(args.port)
 
 print("Starting server: http://localhost:" + str(args.port) + "/")
