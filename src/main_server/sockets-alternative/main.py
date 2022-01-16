@@ -26,7 +26,7 @@ def interpret_data(data):
 
 while True:
     data = c.recv(buf_size)
-    interpret_data(data)
+    interpret_data(data.decode())
     if not data:
         break
     
