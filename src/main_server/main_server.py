@@ -1,10 +1,5 @@
 import asyncio
 import websockets
-import json
-import serial
-
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
-ser.reset_input_buffer()
 
 
 class WebsocketServer:
@@ -16,35 +11,25 @@ class WebsocketServer:
     async def handler(websocket, path):
         # receives data from websocket client
         async for message in websocket:
-            ws_data = json.loads(message)
+            WebsocketServer.ws_data = message
 
 
 async def main_server():
     while True:
         joystick_data = WebsocketServer.ws_data
         print(joystick_data)
-        asyncio.sleep(0.1)
+        await asyncio.sleep(0.1)
 
 
-def arduino_stuff(joystick_data):
-    arduino_command = None
-    if joystick_data["button_values"][0] == 1:
-        arduino_command = {"command": "flash_off", "data": 8}
-    elif joystick_data["button_values"][1] == 1:
-        arduino_command = {"command": "flash_on", "data": 9}
-    if arduino_command:
-        arduino_command_send = json.dumps(arduino_command) + "\n"
-        ser.write(arduino_command_send.encode('ascii'))
-
-
-async def main():
-    print('Server Started!')
-    async with websockets.serve(WebsocketServer.handler, "0.0.0.0", 8765):
-        await asyncio.Future()  # run forever
+def main():
+    ws_server = websockets.serve(WebsocketServer.handler, "0.0.0.0", 8765)
+    asyncio.get_event_loop().run_until_complete(ws_server)
+    asyncio.ensure_future(main_server())
+    asyncio.get_event_loop().run_forever()
 
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        main()
     except KeyboardInterrupt:
         print('')
