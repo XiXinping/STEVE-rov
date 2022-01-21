@@ -12,7 +12,7 @@ async def time(websocket, path):
 
 
 async def main():
-    async with websockets.serve(time, "127.0.0.1", 1234):
+    async with websockets.serve(time, "0.0.0.0", 1234):
         await asyncio.Future()  # run forever
 
 

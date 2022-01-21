@@ -35,6 +35,13 @@ ws.onopen = function() {
     requestImage();
 };
 
+var ws1 = new WebSocket("ws://10.1.57.24:1234/");
+ws1.onmessage = function (event) {
+    var joystick_data_header = document.getElementById("joystick-data");
+    var data = event.data;
+    joystick_data_header.innerHTML = data;
+};
+
 ws.onmessage = function(evt) {
     var arrayBuffer = evt.data;
     var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});

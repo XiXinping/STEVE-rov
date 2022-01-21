@@ -5,8 +5,8 @@ import string
 
 
 async def client(uri):
-    while True:
-        async with websockets.connect(uri) as websocket:
+    async with websockets.connect(uri) as websocket:
+        while True:
             message = ''.join(random.choices(string.ascii_letters, k=8))
             await websocket.send(message)
 
