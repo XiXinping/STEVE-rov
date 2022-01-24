@@ -6,7 +6,9 @@ import websockets
 
 class WebsocketServer:
     ws_data = None
-    clients = set()
+    clients = []
+
+    joystick_client = None
 
     @classmethod
     def pump_ws_data(cls):
@@ -14,12 +16,15 @@ class WebsocketServer:
 
     @classmethod
     async def handler(cls, websocket, path):
-        cls.clients.add(websocket)
+        client_data_json = await websocket.recv()
+        client_data = json.loads(client_data_json)
+        if client_data["client_type"] == "joystick":
+            cls.joystick_client = websocket
         # receives data from websocket client
         async for message in websocket:
             cls.ws_data = message
 
-        cls.clients.remove(websocket)
+        cls.joystick_client = None
 
 
 def pump_arduino_data(ser):
