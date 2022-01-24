@@ -5,26 +5,39 @@ import websockets
 
 
 class WebsocketServer:
-    ws_data = None
-    clients = []
-
+    # registers the websocket objects of the clients to allow sending data to
+    # the clients outside of the handler function
     joystick_client = None
+    web_client = None
+    # incoming joystick data, can be accessed outside of the handler function
+    joystick_data = None
 
     @classmethod
-    def pump_ws_data(cls):
-        return cls.ws_data
+    def pump_joystick_data(cls):
+        return cls.joystick_data
+
+    @classmethod
+    async def joystick_handler(cls, websocket, path):
+        cls.joystick_client = websocket
+        async for message in websocket:
+            cls.joystick_data = json.loads(message)
+        cls.joystick_client = None
+
+    @classmethod
+    async def web_client_handler(cls, websocket, path):
+        cls.web_client = websocket
+        await websockets.wait_closed()
+        cls.web_client = None
 
     @classmethod
     async def handler(cls, websocket, path):
-        client_data_json = await websocket.recv()
-        client_data = json.loads(client_data_json)
-        if client_data["client_type"] == "joystick":
-            cls.joystick_client = websocket
-        # receives data from websocket client
-        async for message in websocket:
-            cls.ws_data = message
-
-        cls.joystick_client = None
+        client_info_json = await websocket.recv()
+        client_info = json.loads(client_info_json)
+        client_type = client_info["client_type"]
+        if client_type == "joystick":
+            await cls.joystick_handler(websocket, path)
+        elif client_type == "web_client":
+            await cls.web_client_handler(websocket, path)
 
 
 def pump_arduino_data(ser):
