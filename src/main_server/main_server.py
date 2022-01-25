@@ -19,6 +19,7 @@ class WebsocketServer:
     @classmethod
     async def joystick_handler(cls, websocket, path):
         cls.joystick_client = websocket
+        print("Joystick client connected")
         async for message in websocket:
             cls.joystick_data = json.loads(message)
         cls.joystick_client = None
@@ -26,12 +27,16 @@ class WebsocketServer:
     @classmethod
     async def web_client_handler(cls, websocket, path):
         cls.web_client = websocket
-        await websockets.wait_closed()
+        print("Web client connected!")
+        while True:
+            await websockets.wait_closed()
+            await asyncio.sleep(1)
         cls.web_client = None
 
     @classmethod
     async def handler(cls, websocket, path):
         client_info_json = await websocket.recv()
+        print("Client connected!")
         client_info = json.loads(client_info_json)
         client_type = client_info["client_type"]
         if client_type == "joystick":
@@ -49,20 +54,20 @@ def pump_arduino_data(ser):
 
 
 async def main_server():
-    ser = serial.Serial('/dev/ttyACM0', 9600)
+    # ser = serial.Serial('/dev/ttyACM0', 9600)
 
     print("Server started!")
     while True:
-        joystick_data_json = WebsocketServer.pump_ws_data()
+        joystick_data_json = WebsocketServer.pump_joystick_data()
         if joystick_data_json:
             # joystick_data = json.loads(joystick_data_json)
             print(joystick_data_json)
         else:
             joystick_data = None
-        arduino_data = pump_arduino_data(ser)
-        if arduino_data:
-            # print(arduino_data)
-            pass
+        # arduino_data = pump_arduino_data(ser)
+        # if arduino_data:
+            # # print(arduino_data)
+            # pass
 
         await asyncio.sleep(0.01)
 

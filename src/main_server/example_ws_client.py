@@ -1,17 +1,19 @@
 import asyncio
-import websockets
+import json
 import random
 import string
+import websockets
 
 
 async def main():
     uri = "ws://localhost:8765"
     client_info = {"client_type": "joystick"}
     async with websockets.connect(uri) as websocket:
-        await websocket.send(client_info)
+        await websocket.send(json.dumps(client_info))
         while True:
-            message = ''.join(random.choices(string.ascii_letters, k=8))
-            await websocket.send(message)
+            data = ''.join(random.choices(string.ascii_letters, k=8))
+            message = {"data": data}
+            await websocket.send(json.dumps(message))
 
 
 if __name__ == '__main__':
