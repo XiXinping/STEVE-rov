@@ -35,7 +35,10 @@ class WebsocketServer:
 
     @classmethod
     async def handler(cls, websocket, path):
-        client_info_json = await websocket.recv()
+        try:
+            asyncio.wait_for(websocket.recv(), timeout=1.0)
+        except TimeoutError:
+            print("Connection failed!")
         print("Client connected!")
         client_info = json.loads(client_info_json)
         client_type = client_info["client_type"]
