@@ -4,7 +4,9 @@
         <title>Websocket Joystick Demo</title>
     </head>
     <body>
-        <h2 id="joystick-data"></h2>
+        <h1>Underwater ROV</h2>
+        <h3>Sensor Data:</h3>
+        <p id="sensor-data">Sensor1: </p>
         <script>
             var ws = new WebSocket("ws://127.0.0.1:8765/");
             // tell server what kind of client this is
@@ -12,10 +14,11 @@
             ws.addEventListener('open', (event) => {
                 ws.send(JSON.stringify(client_info));
             });
+
             ws.onmessage = function (event) {
-                var joystick_data_header = document.getElementById("joystick-data");
+                var joystick_data_header = document.getElementById("sensor-data");
                 var data = event.data;
-                joystick_data_header.innerHTML = data;
+                joystick_data_header.innerText = `Sensor 1 Data: ${data}`;
             };
         </script>
     </body>

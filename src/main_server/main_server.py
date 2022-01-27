@@ -31,6 +31,7 @@ class WebsocketServer:
         while True:
             await websocket.wait_closed()
             await asyncio.sleep(1)
+        print("Web client disconnected!")
         cls.web_client = None
 
     @classmethod
@@ -63,16 +64,14 @@ async def main_server():
 
     print("Server started!")
     while True:
-        joystick_data_json = WebsocketServer.pump_joystick_data()
-        if joystick_data_json:
-            # joystick_data = json.loads(joystick_data_json)
-            print(joystick_data_json)
-        else:
-            joystick_data = None
+        joystick_data = WebsocketServer.pump_joystick_data()
+
+        if WebsocketServer.web_client:
+            await WebsocketServer.web_client.send(json.dumps(joystick_data))
         # arduino_data = pump_arduino_data(ser)
         # if arduino_data:
-            # # print(arduino_data)
-            # pass
+        # # print(arduino_data)
+        # pass
 
         await asyncio.sleep(0.01)
 
