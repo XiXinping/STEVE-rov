@@ -1,6 +1,6 @@
 import asyncio
 import json
-# import serial
+import serial
 import websockets
 
 
@@ -53,27 +53,32 @@ class WebsocketServer:
 
 def pump_arduino_data(ser):
     if ser.in_waiting > 0:
-        arduino_data = ser.read(ser.in_waiting).decode('ascii')
+        arduino_data_recv = ser.read(ser.in_waiting).decode('ascii')
+        if arduino_data_recv:
+            print(arduino_data_recv)
+        try:
+            arduino_data = json.loads(arduino_data_recv)
+        except json.JSONDecodeError:
+            return None
         return arduino_data
     else:
         return None
 
 
 async def main_server():
-    # ser = serial.Serial('/dev/ttyACM0', 9600)
-
+    ser = serial.Serial('/dev/ttyACM0', 115200)
+    await asyncio.sleep(1)
     print("Server started!")
     while True:
         joystick_data = WebsocketServer.pump_joystick_data()
 
-        if WebsocketServer.web_client:
-            await WebsocketServer.web_client.send(json.dumps(joystick_data))
-        # arduino_data = pump_arduino_data(ser)
-        # if arduino_data:
-        # # print(arduino_data)
-        # pass
+        arduino_data = pump_arduino_data(ser)
+        if arduino_data:
+            print(arduino_data)
+            if WebsocketServer.web_client:
+                await WebsocketServer.web_client.send(json.dumps(arduino_data))
 
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.1)
 
 
 def main():

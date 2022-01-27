@@ -134,3 +134,27 @@ Please add any new language that you will be using.
 * Makefile
 * Bash
 
+## Raspberry Pi Server
+
+### RPI
+
+The underwater-rov directory is contains all relevant code. Anything else on the home directory should not be considered and is irrelevant.
+
+Additionally, ignore the pop-up that appears upon booting up the RPI.
+
+### main_server
+
+main_server contains the main python code that will handle communication between clients and the arduino. 
+
+As of January 27, 2022, whether or not camera data will pass through it is undecided.
+
+Communication will be handled by the python websockets library.
+
+Port 8765 will be used to send main server data to the client. 
+
+### Camera 
+
+All files pertaining to the camera are in the camera folder.
+
+
+

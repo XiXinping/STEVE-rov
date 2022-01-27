@@ -16,7 +16,7 @@ import pygame.image
 parser = argparse.ArgumentParser(description='Start the PyImageStream server.')
 
 parser.add_argument('--port', default=8888, type=int, help='''Web server port
-                    (default: 8888)''')
+                    (default: 1234)''')
 parser.add_argument('--camera', default=0, type=int,
                     help='Camera index, first camera is 0 (default: 0)')
 parser.add_argument('--width', default=640, type=int,
