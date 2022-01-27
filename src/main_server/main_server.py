@@ -1,6 +1,6 @@
 import asyncio
 import json
-import serial
+# import serial
 import websockets
 
 
@@ -29,17 +29,19 @@ class WebsocketServer:
         cls.web_client = websocket
         print("Web client connected!")
         while True:
-            await websockets.wait_closed()
+            await websocket.wait_closed()
             await asyncio.sleep(1)
         cls.web_client = None
 
     @classmethod
     async def handler(cls, websocket, path):
         try:
-            asyncio.wait_for(websocket.recv(), timeout=1.0)
-        except TimeoutError:
+            client_info_json = await asyncio.wait_for(websocket.recv(),
+                                                      timeout=2.0)
+            print("Client connected!")
+        except asyncio.TimeoutError:
             print("Connection failed!")
-        print("Client connected!")
+            return
         client_info = json.loads(client_info_json)
         client_type = client_info["client_type"]
         if client_type == "joystick":

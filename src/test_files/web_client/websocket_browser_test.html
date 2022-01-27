@@ -8,7 +8,10 @@
         <script>
             var ws = new WebSocket("ws://127.0.0.1:8765/");
             // tell server what kind of client this is
-            ws.send(JSON.stringify({'client_type': 'web_client'}));
+            const client_info = {'client_type': 'web_client'};
+            ws.addEventListener('open', (event) => {
+                ws.send(JSON.stringify(client_info));
+            });
             ws.onmessage = function (event) {
                 var joystick_data_header = document.getElementById("joystick-data");
                 var data = event.data;
