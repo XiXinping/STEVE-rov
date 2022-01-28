@@ -12,10 +12,11 @@ async def main():
     joystick = pygame.joystick.Joystick(0)
     # websockets uri
     uri = "ws://10.1.57.24:8765"
+    client_info = {"client_info": "joystick"}
     # main event loop
     async with websockets.connect(uri) as websocket:
-        await websocket.send("joystick")
         while True:
+            await websocket.send(json.dumps(client_info))
             # updates the pygame event loop to check for new changes
             pygame.event.pump()
             button_values = [joystick.get_button(i) for i in
