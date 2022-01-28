@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
+    <meta charset="UTF-8">
     <head>
-        <title>Websocket Joystick Demo</title>
+        <title>Underwater ROV Web Client</title>
     </head>
     <body>
         <h1>Underwater ROV</h2>
         <h3>Sensor Data:</h3>
-        <p id="sensor-data">Sensor1: </p>
+        <p id="potentiometer-tag">Potentiometer Data: </p>
+        <p id="leak-tag">Leak Sensor: </p>
         <script>
-            var ws = new WebSocket("ws://127.0.0.1:8765/");
+            var ws = new WebSocket("ws://192.168.0.101:8765/");
             // tell server what kind of client this is
             const client_info = {'client_type': 'web_client'};
             ws.addEventListener('open', (event) => {
@@ -16,9 +18,19 @@
             });
 
             ws.onmessage = function (event) {
-                var joystick_data_header = document.getElementById("sensor-data");
-                var data = event.data;
-                joystick_data_header.innerText = `Sensor 1 Data: ${data}`;
+                var sensor_data = JSON.parse(event.data);
+                var potentiometer_tag =
+                    document.getElementById("potentiometer-tag");
+                var leak_tag = document.getElementById("leak-tag");
+
+                potentiometer_tag.innerText = `Potentiometer Data:\
+                ${sensor_data.potentiometer}`;
+                console.log(sensor_data.leak_sensor);
+                if (sensor_data.leak_sensor == true) {
+                    leak_tag.innerText = 'Leak Sensor: LEAK!!! AAAAAHHHHH!!!';
+                } else {
+                    leak_tag.innerText = 'Leak Sensor: No Leak';
+                }
             };
         </script>
     </body>
