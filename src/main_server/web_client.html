@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <head>
+        <title>Underwater ROV Web Client</title>
+    </head>
+    <body>
+        <h1>Underwater ROV</h2>
+        <h3>Sensor Data:</h3>
+        <p id="potentiometer-tag">Potentiometer Data: </p>
+        <p id="leak-tag">Leak Sensor: </p>
+        <script>
+            var ws = new WebSocket("ws://192.168.0.101:8765/");
+            // tell server what kind of client this is
+            const client_info = {'client_type': 'web_client'};
+            ws.addEventListener('open', (event) => {
+                ws.send(JSON.stringify(client_info));
+            });
+
+            ws.onmessage = function (event) {
+                var sensor_data = JSON.parse(event.data);
+                var potentiometer_tag =
+                    document.getElementById("potentiometer-tag");
+                var leak_tag = document.getElementById("leak-tag");
+
+                potentiometer_tag.innerText = `Potentiometer Data:\
+                ${sensor_data.potentiometer}`;
+                console.log(sensor_data.leak_sensor);
+                if (sensor_data.leak_sensor == true) {
+                    leak_tag.innerText = 'Leak Sensor: LEAK!!! AAAAAHHHHH!!!';
+                } else {
+                    leak_tag.innerText = 'Leak Sensor: No Leak';
+                }
+            };
+        </script>
+    </body>
+</html>

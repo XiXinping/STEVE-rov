@@ -29,10 +29,13 @@ class WebsocketServer:
         cls.web_client = websocket
         print("Web client connected!")
         while True:
-            await websocket.wait_closed()
-            await asyncio.sleep(1)
-        print("Web client disconnected!")
-        cls.web_client = None
+            try:
+                await websocket.wait_closed()
+                print("Web client disconnected!")
+                cls.web_client = None
+                break
+            except websockets.ConnectionClosed:
+                print("Web client disconnected!")
 
     @classmethod
     async def handler(cls, websocket, path):
@@ -54,8 +57,6 @@ class WebsocketServer:
 def pump_arduino_data(ser):
     if ser.in_waiting > 0:
         arduino_data_recv = ser.read(ser.in_waiting).decode('ascii')
-        if arduino_data_recv:
-            print(arduino_data_recv)
         try:
             arduino_data = json.loads(arduino_data_recv)
         except json.JSONDecodeError:
@@ -74,7 +75,6 @@ async def main_server():
 
         arduino_data = pump_arduino_data(ser)
         if arduino_data:
-            print(arduino_data)
             if WebsocketServer.web_client:
                 await WebsocketServer.web_client.send(json.dumps(arduino_data))
 

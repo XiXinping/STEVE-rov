@@ -4,14 +4,15 @@ import argparse
 import os
 import io
 
-import tornado.ioloop
-import tornado.web
-import tornado.websocket
+import asyncio
+import websockets
 
 from PIL import Image
 
 import pygame.camera
 import pygame.image
+
+ws = websocket.Websocket()
 
 parser = argparse.ArgumentParser(description='Start the PyImageStream server.')
 
@@ -84,40 +85,18 @@ class Camera:
 camera = Camera(args.camera, args.width, args.height,
                 args.quality, args.stopdelay)
 
+web_client = None
+string = "doobeedoobeedoo"
 
-class ImageWebSocket(tornado.websocket.WebSocketHandler):
-    clients = set()
-
-    def check_origin(self, origin):
-        # Allow access from every origin
-        return True
-
-    def open(self):
-        ImageWebSocket.clients.add(self)
-        print("WebSocket opened from: " + self.request.remote_ip)
-        camera.request_start()
-
-    def on_message(self, message):
-        jpeg_bytes = camera.get_jpeg_image_bytes()
-        self.write_message(jpeg_bytes, binary=True)
-
-    def on_close(self):
-        ImageWebSocket.clients.remove(self)
-        print("WebSocket closed from: " + self.request.remote_ip)
-        if len(ImageWebSocket.clients) == 0:
-            camera.request_stop()
+async def handler(websocket, path):
+    print("Web client connected!")
+    web_client = websocket
+    while True:
+        await asyncio.wait_close()
+        await asyncio.sleep(1)
 
 
-script_path = os.path.dirname(os.path.realpath(__file__))
-static_path = script_path + '/static/'
-
-app = tornado.web.Application([
-    (r"/websocket", ImageWebSocket),
-    (r"/(.*)", tornado.web.StaticFileHandler,
-     {'path': static_path, 'default_filename': 'index.html'}),
-])
-app.listen(args.port)
-
-print("Starting server: http://localhost:" + str(args.port) + "/")
-
-tornado.ioloop.IOLoop.current().start()
+async def main():
+    while True:
+        if web_client:
+            await web_client.send(string)

@@ -1,10 +1,11 @@
 #include <ArduinoJson.h>
+#include <stdbool.h>
 
-int leak_pin = 2; //Digital pin for leak sensor
-int leak = 0; // 0 is dry, 1 is leak
+int leak_pin = 8; // digital pin for leak sensor
+bool leak = false;
 
 void setup() {
-    pinMode(leak_pin, INPUT_PULLUP);
+    pinMode(leak_pin, INPUT);
     Serial.begin(115200);
 }
 
@@ -20,5 +21,5 @@ void loop() {
     serializeJson(sensor_json_doc, sensor_json_string);
     Serial.println(sensor_json_string);
 
-    delay(500);
+    delay(100);
 }
