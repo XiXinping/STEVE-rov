@@ -88,6 +88,7 @@ camera = Camera(args.camera, args.width, args.height,
 web_client = None
 string = "doobeedoobeedoo"
 
+
 async def handler(websocket, path):
     print("Web client connected!")
     web_client = websocket
