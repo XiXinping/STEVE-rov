@@ -68,33 +68,34 @@ class Camera:
         if self.is_started and not self.stop_requested:
             self.stop_requested = True
             print("Stopping camera in " + str(self.stopdelay) + " seconds...")
-                                                       self._stop)
+            self._stop()
 
     def _start(self):
         print("Starting camera...")
         self._cam.start()
         print("Camera started")
-        self.is_started=True
+        self.is_started = True
 
     def _stop(self):
         if self.stop_requested:
             print("Stopping camera now...")
             self._cam.stop()
             print("Camera stopped")
-            self.is_started=False
-            self.stop_requested=False
+            self.is_started = False
+            self.stop_requested = False
 
     def get_jpeg_image_bytes(self):
-        img=self._cam.get_image()
-        imgstr=pygame.image.tostring(img, "RGB", False)
-        pimg=Image.frombytes("RGB", img.get_size(), imgstr)
+        img = self._cam.get_image()
+        imgstr = pygame.image.tostring(img, "RGB", False)
+        pimg = Image.frombytes("RGB", img.get_size(), imgstr)
         with io.BytesIO() as bytesIO:
-            pimg.save(bytesIO, "JPEG", quality = self.quality, optimize = True)
+            pimg.save(bytesIO, "JPEG", quality=self.quality, optimize=True)
             return bytesIO.getvalue()
 
 
 async def main_server():
-    camera=Camera(1280, 720)  # creats a camera object with resolution 1280x720
+    # creats a camera object with resolution 1280x720
+    camera = Camera(1280, 720)
     print("Server started!")
     while True:
 
@@ -102,8 +103,8 @@ async def main_server():
 
 
 def main():
-    ws_server=websockets.serve(handler, "0.0.0.0", 8765)
-    asyncio.get_event_loop().run_until_complete(ws_server)
+    ws_server = websockets.serve(handler, "0.0.0.0", 8765)
+    ws_server_task = await asyncio.ensure_future(ws_server)
 
 
 if __name__ == '__main__':
