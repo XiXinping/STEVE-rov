@@ -24,16 +24,13 @@
             main_ws.addEventListener('open', (event) => {
                 main_ws.send(JSON.stringify(main_client_info));
             });
-<<<<<<< HEAD
             main_ws.onmessage = function (event) {
-=======
-
+                
             ws.onmessage = function (event) {
                 console.log(typeof(event.data))
                 var arrayBuffer = event.data
                 var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
                 live_image.src = window.URL.createObjectURL(blob);
->>>>>>> cba030518f17dabea04c73692c4b8dded9325b1e
                 var sensor_data = JSON.parse(event.data);
                 potentiometer_tag.innerText = `Potentiometer Data:\
                 ${sensor_data.potentiometer}`;
