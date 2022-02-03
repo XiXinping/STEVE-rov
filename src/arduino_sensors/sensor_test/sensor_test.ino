@@ -9,7 +9,7 @@ void setup() {
     Serial.begin(115200);
 }
 
-char sensor_json_string[256];
+char sensor_json_string[128];
 
 void loop() {
     StaticJsonDocument<128> sensor_json_doc;
