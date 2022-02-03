@@ -13,7 +13,11 @@ class WSServer:
     # registers the websocket objects of the clients to allow sending data to
     # the clients outside of the handler function
     joystick_client = None
-    web_client = None
+    # web client websocket object used to transmit non-image data (sensor data)
+    web_client_main = None
+    # separate websocket used to transmit binary image data
+    web_client_camera = None
+
     # incoming joystick data, can be accessed outside of the handler function
     joystick_data = None
 
@@ -30,14 +34,27 @@ class WSServer:
         cls.joystick_client = None
 
     @classmethod
-    async def web_client_handler(cls, websocket, path):
-        cls.web_client = websocket
+    async def web_client_main_handler(cls, websocket, path):
+        cls.web_client_main = websocket
         print("Web client connected!")
         while True:
             try:
                 await websocket.wait_closed()
                 print("Web client disconnected!")
-                cls.web_client = None
+                cls.web_client_main = None
+                break
+            except websockets.ConnectionClosed:
+                print("Web client disconnected!")
+
+    @classmethod
+    async def web_client_camera_handler(cls, websocket, path):
+        cls.web_client_camera = websocket
+        print("Web client connected!")
+        while True:
+            try:
+                await websocket.wait_closed()
+                print("Web client disconnected!")
+                cls.web_client_camera = None
                 break
             except websockets.ConnectionClosed:
                 print("Web client disconnected!")
@@ -55,8 +72,10 @@ class WSServer:
         client_type = client_info["client_type"]
         if client_type == "joystick":
             await cls.joystick_handler(websocket, path)
-        elif client_type == "web_client":
-            await cls.web_client_handler(websocket, path)
+        elif client_type == "web_client_main":
+            await cls.web_client_main_handler(websocket, path)
+        elif client_type == "web_client_camera":
+            await cls.web_client_camera_handler(websocket, path)
 
 
 class Camera:
@@ -113,9 +132,9 @@ async def camera_server():
     frames_per_second = 30
     camera.request_start()
     while True:
-        if WSServer.web_client:
+        if WSServer.web_client_camera:
             image_bytes = camera.get_jpeg_image_bytes()
-            await WSServer.web_client.send(image_bytes)
+            await WSServer.web_client_camera.send(image_bytes)
         await asyncio.sleep(1 / frames_per_second)
 
 
@@ -139,9 +158,9 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
 
         arduino_data = pump_arduino_data(ser)
-        # if arduino_data:
-        # if WSServer.web_client:
-        # await WSServer.web_client.send(json.dumps(arduino_data))
+        if arduino_data:
+            if WSServer.web_client_main:
+                await WSServer.web_client_main.send(json.dumps(arduino_data))
 
         await asyncio.sleep(0.1)
 

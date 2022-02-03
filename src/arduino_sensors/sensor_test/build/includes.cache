@@ -1,0 +1,22 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/pi/underwater-rov/src/arduino_sensors/sensor_test/build/sketch/sensor_test.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "/home/pi/Arduino/libraries/ArduinoJson/src"
+  },
+  {
+    "Sourcefile": "/home/pi/underwater-rov/src/arduino_sensors/sensor_test/build/sketch/sensor_test.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

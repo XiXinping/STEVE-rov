@@ -1,9 +1,16 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/arduino_sensors/sensor_test/sensor_test.ino"
 #include <ArduinoJson.h>
 #include <stdbool.h>
 
 int leak_pin = 6; // digital pin for leak sensor
 bool leak = false;
 
+#line 7 "/home/pi/underwater-rov/src/arduino_sensors/sensor_test/sensor_test.ino"
+void setup();
+#line 14 "/home/pi/underwater-rov/src/arduino_sensors/sensor_test/sensor_test.ino"
+void loop();
+#line 7 "/home/pi/underwater-rov/src/arduino_sensors/sensor_test/sensor_test.ino"
 void setup() {
     pinMode(leak_pin, INPUT);
     Serial.begin(115200);
@@ -23,3 +30,4 @@ void loop() {
 
     delay(100);
 }
+
