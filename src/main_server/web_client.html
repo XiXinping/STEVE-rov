@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <head>
+        <title>Underwater ROV Web Client</title>
+    </head>
+    <body>
+        <h1>Underwater ROV</h2>
+        <h3>Camera Feed</h3>
+        <img id=live-image>
+        <h3>Sensor Data</h3>
+        <p id="potentiometer-tag">Potentiometer Data: </p>
+        <p id="leak-tag">Leak Sensor: </p>
+        <script>
+            var potentiometer_tag =
+                document.getElementById("potentiometer-tag");
+            var leak_tag = document.getElementById("leak-tag");
+            const live_image = document.getElementById("live-image");
+
+            var main_ws = new WebSocket("ws://10.1.57.24:8765");
+
+            // tell server what kind of client this is
+            const main_client_info = {'client_type': 'web_client_main'};
+            main_ws.addEventListener('open', (event) => {
+                main_ws.send(JSON.stringify(main_client_info));
+            });
+<<<<<<< HEAD
+            main_ws.onmessage = function (event) {
+=======
+
+            ws.onmessage = function (event) {
+                console.log(typeof(event.data))
+                var arrayBuffer = event.data
+                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
+                live_image.src = window.URL.createObjectURL(blob);
+>>>>>>> cba030518f17dabea04c73692c4b8dded9325b1e
+                var sensor_data = JSON.parse(event.data);
+                potentiometer_tag.innerText = `Potentiometer Data:\
+                ${sensor_data.potentiometer}`;
+                console.log(sensor_data.leak_sensor);
+                if (sensor_data.leak_sensor == true) {
+                    leak_tag.innerText = 'Leak Sensor: LEAK!!! AAAAAHHHHH!!!';
+                } else {
+                    leak_tag.innerText = 'Leak Sensor: No Leak';
+                }
+            };
+
+            var camera_ws = new WebSocket("ws://10.1.57.24:8765");
+            camera_ws.binaryType = 'arraybuffer';
+            const camera_client_info = {'client_type': 'web_client_camera'};
+            camera_ws.addEventListener('open', (event) =>{
+                camera_ws.send(JSON.stringify(camera_client_info));
+            });
+            camera_ws.onmessage = function (event) {
+                console.log(typeof(event.data));
+                var arrayBuffer = event.data;
+                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
+                live_image.src = window.URL.createObjectURL(blob);
+            };
+        </script>
+    </body>
+</html>
