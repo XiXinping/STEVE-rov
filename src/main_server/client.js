@@ -21,7 +21,7 @@ if(path.endsWith("index.html"))
 if(!path.endsWith("/")) {
     path = path + "/";
 }
-var ws = new WebSocket(wsProtocol + location.host + path + "websocket");
+var ws = new WebSocket("ws://192.168.0.101");
 ws.binaryType = 'arraybuffer';
 
 function requestImage() {
@@ -42,7 +42,8 @@ ws1.onmessage = function (event) {
     joystick_data_header.innerHTML = data;
 };
 
-ws.onmessage = function(evt) {
+ws.onmessage = function(event) {
+    console.log(typeof(event.data))
     var arrayBuffer = evt.data;
     var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
     img.src = window.URL.createObjectURL(blob);

@@ -18,6 +18,7 @@
             });
 
             ws.onmessage = function (event) {
+                console.log(typeof(event.data))
                 var sensor_data = JSON.parse(event.data);
                 var potentiometer_tag =
                     document.getElementById("potentiometer-tag");
