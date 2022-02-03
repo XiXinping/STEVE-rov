@@ -19,6 +19,9 @@
 
             ws.onmessage = function (event) {
                 console.log(typeof(event.data))
+                var arrayBuffer = event.data
+                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
+                live_image.src = window.URL.createObjectURL(blob);
                 var sensor_data = JSON.parse(event.data);
                 var potentiometer_tag =
                     document.getElementById("potentiometer-tag");

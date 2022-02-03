@@ -109,12 +109,14 @@ class Camera:
 
 
 async def camera_server():
-    camera = Camera(1280, 720)
+    camera = Camera(854, 480)
+    frames_per_second = 30
+    camera.request_start()
     while True:
         if WSServer.web_client:
             image_bytes = camera.get_jpeg_image_bytes()
-            WSServer.web_client.send(image_bytes)
-        await asyncio.sleep(1/30)  # number of frames per second
+            await WSServer.web_client.send(image_bytes)
+        await asyncio.sleep(1 / frames_per_second)
 
 
 def pump_arduino_data(ser):
@@ -137,9 +139,9 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
 
         arduino_data = pump_arduino_data(ser)
-        if arduino_data:
-            if WSServer.web_client:
-                await WSServer.web_client.send(json.dumps(arduino_data))
+        # if arduino_data:
+        # if WSServer.web_client:
+        # await WSServer.web_client.send(json.dumps(arduino_data))
 
         await asyncio.sleep(0.1)
 
