@@ -114,7 +114,7 @@ async def camera_server():
         if WSServer.web_client:
             image_bytes = camera.get_jpeg_image_bytes()
             WSServer.web_client.send(image_bytes)
-            await asyncio.sleep(1/30)  # number of frames per second
+        await asyncio.sleep(1/30)  # number of frames per second
 
 
 def pump_arduino_data(ser):
@@ -144,22 +144,17 @@ async def main_server():
         await asyncio.sleep(0.1)
 
 
-# def main():
-    # ws_server = websockets.serve(WSServer.handler, "0.0.0.0", 8765)
-    # asyncio.get_event_loop().run_until_complete(ws_server)
-    # asyncio.ensure_future(camera_server())
-    # asyncio.get_event_loop().run_until_complete()
-    # asyncio.ensure_future(main_server())
-    # asyncio.get_event_loop().run_forever()
-async def main():
+def main():
+    loop = asyncio.get_event_loop()
     ws_server = websockets.serve(WSServer.handler, "0.0.0.0", 8765)
-    ws_server_task = await asyncio.ensure_future(ws_server)
-    main_server_task = await asyncio.ensure_future(main_server())
-    await asyncio.gather(ws_server_task, main_server_task)
+    asyncio.ensure_future(ws_server)
+    asyncio.ensure_future(camera_server())
+    asyncio.ensure_future(main_server())
+    loop.run_forever()
 
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        main()
     except KeyboardInterrupt:
         print('')
