@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#line 1 "/home/random/Projects/underwater-rov/src/motors/robotbot/robotbot.ino"
 /*************************************************** 
   This is an example for our Adafruit 16-channel PWM & Servo driver
   Servo test - this will drive 8 servos, one after the other on the
@@ -50,30 +48,30 @@ uint8_t servonum = 0;
 
 
 void setup() {
-   Serial.begin(9600);
-   Serial.println("8 channel Servo test!");
+     Serial.begin(9600);
+     Serial.println("8 channel Servo test!");
 
-   pwm.begin();
-   /*
-   * In theory the internal oscillator (clock) is 25MHz but it really isn't
-   * that precise. You can 'calibrate' this by tweaking this number until
-   * you get the PWM update frequency you're expecting!
-   * The int.osc. for the PCA9685 chip is a range between about 23-27MHz and
-   * is used for calculating things like writeMicroseconds()
-   * Analog servos run at ~50 Hz updates, It is importaint to use an
-   * oscilloscope in setting the int.osc frequency for the I2C PCA9685 chip.
-   * 1) Attach the oscilloscope to one of the PWM signal pins and ground on
-   *    the I2C PCA9685 chip you are setting the value for.
-   * 2) Adjust setOscillatorFrequency() until the PWM update frequency is the
-   *    expected value (50Hz for most ESCs)
-   * Setting the value here is specific to each individual I2C PCA9685 chip and
-   * affects the calculations for the PWM update frequency. 
-   * Failure to correctly set the int.osc value will cause unexpected PWM results
-   */
-  pwm.setOscillatorFrequency(27000000);
-  pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
+     pwm.begin();
+     /*
+     * In theory the internal oscillator (clock) is 25MHz but it really isn't
+     * that precise. You can 'calibrate' this by tweaking this number until
+     * you get the PWM update frequency you're expecting!
+     * The int.osc. for the PCA9685 chip is a range between about 23-27MHz and
+     * is used for calculating things like writeMicroseconds()
+     * Analog servos run at ~50 Hz updates, It is importaint to use an
+     * oscilloscope in setting the int.osc frequency for the I2C PCA9685 chip.
+     * 1) Attach the oscilloscope to one of the PWM signal pins and ground on
+     *    the I2C PCA9685 chip you are setting the value for.
+     * 2) Adjust setOscillatorFrequency() until the PWM update frequency is the
+     *    expected value (50Hz for most ESCs)
+     * Setting the value here is specific to each individual I2C PCA9685 chip and
+     * affects the calculations for the PWM update frequency. 
+     * Failure to correctly set the int.osc value will cause unexpected PWM results
+     */
+    pwm.setOscillatorFrequency(27000000);
+    pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
 
-  delay(10);
+    delay(10);
 }
 
 // You can use this function if you'd like to set the pulse length in seconds
@@ -92,48 +90,50 @@ void setServoPulse(uint8_t n, double pulse) {
     pwm.setPWM(n, 0, pulse);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-void forward (int motor, int amount) { //which motor and how fast to go (from minIn to maxIn)
-    int milDel=map(amount, minIn, maxIn, 1500, 1900);
-    pwm.writeMicroseconds(motor, milDel);
-}
-void Stop(int motor) {
-    pwm.writeMicroseconds(motor, 1500);
-}
-void backward(int motor, int amount) {
-    int milDel=map(amount, minIn, maxIn, 1100, 1500);
-    pwm.writeMicroseconds(motor,1100);
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void robotForward(int amount) {
-    forward(1, amount);
-    forward(2, amount);
-    backward(3, amount);
-    backward(4, amount);
+void fire_motor(int motor_num, int8_t velocity) {
+    // convert the velocity into a microsecond delay that the motor can use
+    int microsecond_delay = map(velocity, -128, 127, USMIN, USMAX);
+    pwm.writeMicroseconds(motor_num, microsecond_delay);
 }
 
-void robotBackward(int amount) {
-    backward(1, amount);
-    backward(2, amount);
-    forward(3, amount);
-    forward(4, amount);
+// move the robot left or right
+void move_x(int8_t velocity) {
+    // if the velocity is positive, the robot will move right, if the
+    // velocity is negative, the robot will move left
+    fire_motor(0, -velocity); // top left motor should fire backwards
+    fire_motor(1, velocity); // top right motor should fire backwards
+    fire_motor(2, velocity); // bottom left motor should fire forwards
+    fire_motor(3, -velocity); // bottom right motor should fire backwards
 }
-void robotUp(int amount) {
-    forward(5, amount);
-    forward(6, amount);
+
+// move the robot forward or backward
+void move_y(int8_t velocity) {
+    // positive velocity makes the robot move forward, negative velocity makes
+    // the robot move backward
+    fire_motor(0, -velocity);
+    fire_motor(1, -velocity);
+    fire_motor(2, velocity);
+    fire_motor(3, velocity);
 }
-void robotDown(int amount) {
-    backward(5, amount);
-    backward(6, amount);
+
+// move the robot up or down
+void move_z(int8_t velocity) {
+    // positive velocity makes the robot move up, negative velocity makes the
+    // robot move down
+    fire_motor(4, -velocity);
+    fire_motor(5, -velocity);
 }
-void robotLeft(int amount) {
-    backward(1, amount);
-    backwards(4, amount);
-    forward(2, amount);
-    forward(3, amount);
+
+// turn the robot to left or right
+void yaw(int8_t velocity) {
+    // positive velocity makes the robot turn right, negative velocity makes
+    // the robot turn left
+    fire_motor(0, -velocity);
+    fire_motor(1, velocity);
+    fire_motor(2, -velocity);
+    fire_motor(3, velocity);
 }
-void robotRight(int amount);
+
 
 void loop() {
   /*
@@ -177,4 +177,3 @@ void loop() {
   //forward(3);
   
 }
-
