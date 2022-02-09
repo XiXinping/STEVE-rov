@@ -10,9 +10,11 @@ async def receive_data(websocket, path):
     try:
         clients.add(websocket)
         async for message in websocket:
-            joystick_data = json.loads(message)  # loads joystick data into dictionary
+            # loads joystick data into dictionary
+            joystick_data = json.loads(message)
             print(joystick_data)
-            websockets.broadcast(clients, message)  # sends the data to all clients
+            # sends the data to all clients
+            websockets.broadcast(clients, message)
     finally:
         clients.remove(websocket)
 

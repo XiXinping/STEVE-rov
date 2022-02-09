@@ -90,26 +90,22 @@ void setServoPulse(uint8_t n, double pulse) {
     pwm.setPWM(n, 0, pulse);
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-void forward (int motor, int amount) { //which motor and how fast to go (from minIn to maxIn)
-    int milDel=map(amount, minIn, maxIn, 1500, 1900);
-    pwm.writeMicroseconds(motor, milDel);
+void fire_motor(int motor_num, int8_t velocity) {
+    // convert the velocity into a microsecond delay that the motor can use
+    int microsecond_delay = map(velocity, -128, 127, USMIN, USMAX);
+    pwm.writeMicroseconds(motor_num, microsecond_delay);
 }
-void Stop(int motor) {
-    pwm.writeMicroseconds(motor, 1500);
-}
-void backward(int motor, int amount) {
-    int milDel=map(amount, minIn, maxIn, 1100, 1500);
-    pwm.writeMicroseconds(motor,1100);
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void robotForward(int amount) {
-    forward(1, amount);
-    forward(2, amount);
-    backward(3, amount);
-    backward(4, amount);
+// move the robot left or right
+void move_x(int8_t velocity) {
+    // if the velocity is positive, the robot will move right, if the
+    // velocity is negative, the robot will move left
+    fire_motor(0, -velocity); // top left motor should fire backwards
+    fire_motor(1, velocity); // top right motor should fire backwards
+    fire_motor(2, velocity); // bottom left motor should fire forwards
+    fire_motor(3, -velocity); // bottom right motor should fire backwards
 }
+
 
 void robotBackward(int amount) {
     backward(1, amount);
