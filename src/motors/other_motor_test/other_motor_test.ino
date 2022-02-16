@@ -37,6 +37,11 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 #define USMAX  1900 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
 
+////////////////////////////////////////////////////////////////////////////////////
+int minIn=0;  //the minimum input value for the motor speed
+int maxIn=100; //the maximum input value for the motor speed
+////////////////////////////////////////////////////////////////////////////////////
+
 // our servo # counter
 uint8_t servonum = 0;
 
@@ -84,26 +89,71 @@ void setServoPulse(uint8_t n, double pulse) {
   Serial.println(pulse);
   pwm.setPWM(n, 0, pulse);
 }
-void forward (int motor){
-   pwm.writeMicroseconds(motor,1900);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+void forward(int motor, int amount){ //which motor and how fast to go (from minIn to maxIn)
+  int milDel=map(amount, minIn, maxIn, 1500, 1900);
+   pwm.writeMicroseconds(motor, milDel);
 }
 void Stop(int motor){
   pwm.writeMicroseconds(motor,1500);
 }
-void backward (int motor){
+void backward (int motor, int amount){
+  int milDel=map(amount, minIn, maxIn, 1100, 1500);
    pwm.writeMicroseconds(motor,1100);
 }
-/*void robotForward(){
-  forward(0);
-  forward(1);
-  forawrd(2);
-  forward(3);
-}*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void robotForward(int amount){
+  forward(1,amount);
+  forward(2,amount);
+  backward(3,amount);
+  backward(4,amount);
+}
+
+void robotBackward(int amount){
+  backward(1,amount);
+  backward(2,amount);
+  forward(3,amount);
+  forward(4,amount);
+}
+void robotUp(int amount){
+  forward(5,amount);
+  forward(6,amount);
+}
+void robotDown(int amount){
+  backward(5,amount);
+  backward(6,amount);
+}
+void robotLeft(int amount){
+  backward(1,amount);
+  backward(4,amount);
+  forward(2,amount);
+  forward(3,amount);
+}
+void robotRight(int amount){
+  backward(2,amount);
+  backward(3,amount);
+  forward(1,amount);
+  forward(4,amount);
+}
+void robotTrunLeft(int amount){
+  forward(2,amount);
+  forward(4,amount);
+  backward(1,amount);
+  backward(3,amount);
+  }
+ void robotTurnRight(int amount){
+  forward(1,amount);
+  forward(3,amount);
+  backward(2,amount);
+  backward(4,amount);
+}
 
 void loop() {
-  /*
-  // Drive each servo one at a time using setPWM()
-  Serial.println(servonum);
+  
+  /*// Drive each servo one at a time using setPWM()*/
+  /*Serial.println(servonum);*/
   for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
     pwm.setPWM(servonum, 0, pulselen);
   }
@@ -117,28 +167,20 @@ void loop() {
 
   // Drive each servo one at a time using writeMicroseconds(), it's not precise due to calculation rounding!
   // The writeMicroseconds() function is used to mimic the Arduino Servo library writeMicroseconds() behavior. 
-  for (uint16_t microsec = USMIN; microsec < USMAX; microsec++) {
-    pwm.writeMicroseconds(servonum, microsec);
-  }
+  /*for (uint16_t microsec = USMIN; microsec < USMAX; microsec++) {*/
+    /*pwm.writeMicroseconds(servonum, microsec);*/
+  /*}*/
+  /*forward(servonum, 100);*/
 
-  delay(500);
-  for (uint16_t microsec = USMAX; microsec > USMIN; microsec--) {
-    pwm.writeMicroseconds(servonum, microsec);
-  }
-
-  delay(500);
-
-  servonum++;
-  if (servonum > 1) servonum = 0; // Testing the first 8 servo channels
-  */
-  forward(4);
-  delay(1000);
-  Stop(4);
-  delay(1000);
-  backward(4);
-  delay(1000);
-  Stop(4);
-  delay(10000);
-  //forward(3);
   
+
+  /*for (uint16_t microsec = USMAX; microsec > USMIN; microsec--) {*/
+    /*pwm.writeMicroseconds(servonum, microsec);*/
+  /*}*/
+  /*int milDel=map(100, 0, 100, 1500, 1900);*/
+  /*pwm.writeMicroseconds(0, milDel);*/
+  /*servonum++;*/
+  /*if (servonum > 1) servonum = 0; // Testing the first 8 servo channels*/
+  
+
 }

@@ -1,0 +1,42 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/pi/underwater-rov/src/motors/other_motor_test/build/sketch/other_motor_test.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/libraries/Wire/src"
+  },
+  {
+    "Sourcefile": "/home/pi/underwater-rov/src/motors/other_motor_test/build/sketch/other_motor_test.ino.cpp",
+    "Include": "Adafruit_PWMServoDriver.h",
+    "Includepath": "/home/pi/Arduino/libraries/Adafruit_PWM_Servo_Driver_Library-2.4.0"
+  },
+  {
+    "Sourcefile": "/home/pi/underwater-rov/src/motors/other_motor_test/build/sketch/other_motor_test.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/libraries/Wire/src/Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/libraries/Wire/src/utility/twi.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/pi/Arduino/libraries/Adafruit_PWM_Servo_Driver_Library-2.4.0/Adafruit_PWMServoDriver.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]
