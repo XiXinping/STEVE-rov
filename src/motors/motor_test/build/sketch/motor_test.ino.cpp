@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
 /*************************************************** 
   This is an example for our Adafruit 16-channel PWM & Servo driver
   Servo test - this will drive 8 servos, one after the other on the
@@ -47,6 +49,25 @@ int8_t maxIn=127; //the maximum input value for the motor speed
 uint8_t servonum = 0;
 
 
+#line 50 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void setup();
+#line 80 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void setServoPulse(uint8_t n, double pulse);
+#line 94 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void fire_motor(int motor_num, int8_t velocity);
+#line 102 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_x(int8_t velocity);
+#line 112 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_y(int8_t velocity);
+#line 122 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_z(int8_t velocity);
+#line 130 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void yaw(int8_t velocity);
+#line 139 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void stop_all();
+#line 148 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void loop();
+#line 50 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
 void setup() {
      Serial.begin(9600);
      Serial.println("8 channel Servo test!");
@@ -208,3 +229,4 @@ void loop() {
     /*delay(1000);*/
   
 /*}*/
+

@@ -161,14 +161,15 @@ async def main_server():
             x_velocity = joystick_data['axes_coords'][0]
             # the joystick interprets up as -1 and down as 1, the negative just
             # reverses this so up is 1 and down is -1
-            y_velocity = -joystick_data['axes_coords'][1] * 127
+            y_velocity = int(round(-joystick_data['axes_coords'][1] * 64))
             z_velocity = joystick_data['dpad_coords'][1]
             yaw_velocity = joystick_data['axes_coords'][2]
-            arduino_velocity_data = {"x_velocity": x_velocity, "y_velocity":
-                                     y_velocity, "z_velocity": z_velocity,
-                                     "yaw_velocity": yaw_velocity}
-
+            # arduino_velocity_data = {"x_velocity": x_velocity, "y_velocity":
+            # y_velocity, "z_velocity": z_velocity,
+            # "yaw_velocity": yaw_velocity}
+            arduino_velocity_data = {"y_velocity": y_velocity}
             arduino_velocity_send = json.dumps(arduino_velocity_data) + '\n'
+            print(y_velocity)
             ser.write(arduino_velocity_send.encode('ascii'))
         if arduino_data:
             if WSServer.web_client_main:
