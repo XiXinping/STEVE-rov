@@ -181,7 +181,7 @@ void loop() {
 
         receive_joystick_data = "";
     }
-    Serial.println(y_velocity);
+    Serial.println(i_velocity);
     fire_motor(0, ooga);
     fire_motor(1, y_velocity);
     delay(100);
