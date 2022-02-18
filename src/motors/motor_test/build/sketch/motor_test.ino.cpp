@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
 /*************************************************** 
   This is an example for our Adafruit 16-channel PWM & Servo driver
   Servo test - this will drive 8 servos, one after the other on the
@@ -51,6 +53,25 @@ uint8_t servonum = 0;
 
 // You can use this function if you'd like to set the pulse length in seconds
 // e.g. setServoPulse(0, 0.001) is a ~1 millisecond pulse width. It's not precise!
+#line 54 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void setServoPulse(uint8_t n, double pulse);
+#line 68 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void fire_motor(int motor_num, int velocity);
+#line 75 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_x(int8_t velocity);
+#line 85 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_y(int8_t velocity);
+#line 95 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_z(int8_t velocity);
+#line 103 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void yaw(int8_t velocity);
+#line 112 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void stop_all();
+#line 123 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void setup();
+#line 161 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void loop();
+#line 54 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
 void setServoPulse(uint8_t n, double pulse) {
     double pulselength;
   
@@ -223,3 +244,4 @@ void loop() {
     /*delay(1000);*/
   
 /*}*/
+

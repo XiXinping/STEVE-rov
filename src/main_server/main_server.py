@@ -169,8 +169,8 @@ async def main_server():
             # "yaw_velocity": yaw_velocity}
             arduino_velocity_data = {"y_velocity": y_velocity}
             arduino_velocity_send = json.dumps(arduino_velocity_data) + '\n'
-            print(y_velocity)
             ser.write(arduino_velocity_send.encode('ascii'))
+            print(y_velocity)
         if arduino_data:
             if WSServer.web_client_main:
                 await WSServer.web_client_main.send(json.dumps(arduino_data))
