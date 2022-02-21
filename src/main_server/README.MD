@@ -1,5 +1,5 @@
-# Main Server
-
-A websockets server for communication between command and control computer, and the raspberry pi.
-
-It will have a `while True:` on the server side that will get data from the sensors and transmit it back to the client. 
+Folder for working using the joystick/controller to control the arduino.
+- Connect joystick to PC client using PyGame
+- Connect PC Client to websocket server hosted on RPi
+- Send data from PC Client over websockets to RPi
+- Send data from RPi to arduino using JSON and PySerial
