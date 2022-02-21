@@ -65,7 +65,7 @@ The webclient is the user interface for interacting with the ROV, it is written 
 
 ### Controller Input
 
-**SHOULD BE DONE MY MATTY**
+Input is taken from a PlayStation controller through pygame. It takes velocities from each axis on a coordinate grid. 
 
 ### Video Displaying
 
