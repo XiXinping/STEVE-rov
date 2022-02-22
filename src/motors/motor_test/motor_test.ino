@@ -20,9 +20,10 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <ArduinoJson.h>
-
+#include <Adafruit_LiquidCrystal.h>
 // called this way, it uses the default address 0x40
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+Adafruit_LiquidCrystal lcd(0);
 // you can also call it with a different address you want
 //Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver(0x41);
 // you can also call it with a different address and I2C interface
@@ -45,8 +46,6 @@ int8_t maxIn=127; //the maximum input value for the motor speed
 
 // our servo # counter
 uint8_t servonum = 0;
-
-
 
 
 // You can use this function if you'd like to set the pulse length in seconds
@@ -118,13 +117,12 @@ void stop_all() {
 String receive_joystick_data = "";
 
 int y_velocity = 0;
-int ooga = 20;
 
 void setup() {
-     Serial.begin(9600);
-     Serial.println("8 channel Servo test!");
+     Serial.begin(115200);
 
      pwm.begin();
+     lcd.begin(16, 2);
      /*
      * In theory the internal oscillator (clock) is 25MHz but it really isn't
      * that precise. You can 'calibrate' this by tweaking this number until
@@ -146,16 +144,25 @@ void setup() {
 
     fire_motor(0, 0);
     fire_motor(1, 0);
-    for(int i = 6; i > 0; i--) {
+    for(int i = 5; i > 0; i--) {
         Serial.print("Starting in ");
         Serial.print(i);
         Serial.println(" second(s)!");
+        lcd.setCursor(1, 0);
+        lcd.print("Starting in ");
+        lcd.print(i);
+        lcd.setCursor(1, 1);
+        lcd.print("second(s)");
+
         delay(1000);
     }
-    Serial.println("Motor Started!");
-    /*fire_motor(0, 20);*/
-    /*fire_motor(1, 20);*/
-
+    lcd.clear();
+    for(int i = 0; i < 6; i++) {
+        fire_motor(i, 20);
+    }
+    lcd.print("Starting motors!");
+    delay(1000);
+    stop_all();
 }
 
 void loop() {
@@ -174,17 +181,17 @@ void loop() {
             return;                                                                 
         }                                                                           
         // parses data from the json document and stores them as variables          
-        /*const uint8_t x_velocity = doc["x_velocity"];*/
+        const uint8_t x_velocity = doc["x_velocity"];
         y_velocity = doc["y_velocity"];
-        /*const uint8_t z_velocity = doc["z_velocity"];*/
-        /*const uint8_t yaw_velocity = doc["yaw_velocity"];*/
+        const uint8_t z_velocity = doc["z_velocity"];
+        const uint8_t yaw_velocity = doc["yaw_velocity"];
 
         receive_joystick_data = "";
     }
-    Serial.println(i_velocity);
-    fire_motor(0, ooga);
+    Serial.println(y_velocity);
+    fire_motor(0, y_velocity);
     fire_motor(1, y_velocity);
-    delay(100);
+    delay(50);
 }
 /*void loop() {*/
     /*

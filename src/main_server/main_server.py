@@ -161,7 +161,7 @@ async def main_server():
             x_velocity = joystick_data['axes_coords'][0]
             # the joystick interprets up as -1 and down as 1, the negative just
             # reverses this so up is 1 and down is -1
-            y_velocity = int(round(-joystick_data['axes_coords'][1] * 64))
+            y_velocity = int(round(-joystick_data['axes_coords'][1] * 32))
             z_velocity = joystick_data['dpad_coords'][1]
             yaw_velocity = joystick_data['axes_coords'][2]
             # arduino_velocity_data = {"x_velocity": x_velocity, "y_velocity":
