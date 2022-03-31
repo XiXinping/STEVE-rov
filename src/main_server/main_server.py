@@ -1,10 +1,12 @@
 import asyncio
 import io
 import json
-import serial
 from PIL import Image
+import picamera
 import pygame.camera
 import pygame.image
+import serial
+import time
 import websockets
 
 
@@ -31,6 +33,7 @@ class WSServer:
         print("Joystick client connected")
         async for message in websocket:
             cls.joystick_data = json.loads(message)
+            print(cls.joystick_data)
         cls.joystick_client = None
 
     @classmethod
@@ -129,7 +132,7 @@ class Camera:
 
 async def camera_server():
     camera = Camera(854, 480)
-    frames_per_second = 30
+    frames_per_second = 60
     camera.request_start()
     while True:
         if WSServer.web_client_camera:
@@ -141,11 +144,12 @@ async def camera_server():
 def pump_arduino_data(ser):
     if ser.in_waiting > 0:
         arduino_data_recv = ser.read(ser.in_waiting).decode('ascii')
-        try:
-            arduino_data = json.loads(arduino_data_recv)
-        except json.JSONDecodeError:
-            return None
-        return arduino_data
+        # try:
+        # arduino_data = json.loads(arduino_data_recv)
+        # except json.JSONDecodeError:
+        # return None
+        # return arduino_data
+        return arduino_data_recv
     else:
         return None
 
@@ -158,32 +162,32 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = pump_arduino_data(ser)
         if joystick_data:
-            x_velocity = int(round(-joystick_data['axes_coords'][0] * 32))
+            x_velocity = int(round(joystick_data['axes_coords'][0] * 32))
             # the joystick interprets up as -1 and down as 1, the negative just
             # reverses this so up is 1 and down is -1
             y_velocity = int(round(-joystick_data['axes_coords'][1] * 32))
             z_velocity = joystick_data['dpad_coords'][1] * 32
             yaw_velocity = int(round(joystick_data['axes_coords'][2] * 32))
-            # arduino_velocity_data = {"x_velocity": x_velocity, "y_velocity":
-            # y_velocity, "z_velocity": z_velocity,
-            # "yaw_velocity": yaw_velocity}
             arduino_velocity_data = {
-                "x_velocity": x_velocity, "y_velocity": y_velocity, "z_velocity": z_velocity, "yaw_velocity": yaw_velocity}
+                "x": x_velocity, "y": y_velocity,
+                "z": z_velocity, "yaw": yaw_velocity}
             arduino_velocity_send = json.dumps(arduino_velocity_data) + '\n'
+            print(f'{time.time()} | {arduino_velocity_data}')
             ser.write(arduino_velocity_send.encode('ascii'))
-            print(yaw_velocity)
-        if arduino_data:
-            if WSServer.web_client_main:
-                await WSServer.web_client_main.send(json.dumps(arduino_data))
+        # if arduino_data:
+        # print(arduino_data)
+        # if WSServer.web_client_main:
+        #         await WSServer.web_client_main.send(json.dumps(arduino_data))
 
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.01)
 
 
 def main():
     loop = asyncio.get_event_loop()
-    ws_server = websockets.serve(WSServer.handler, "0.0.0.0", 8765)
+    ws_server = websockets.serve(
+        WSServer.handler, "0.0.0.0", 8765, ping_interval=None)
     asyncio.ensure_future(ws_server)
-    # asyncio.ensure_future(camera_server())
+    asyncio.ensure_future(camera_server())
     asyncio.ensure_future(main_server())
     loop.run_forever()
 
