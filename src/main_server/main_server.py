@@ -2,7 +2,6 @@ import asyncio
 import io
 import json
 from PIL import Image
-import picamera
 import pygame.camera
 import pygame.image
 import serial
