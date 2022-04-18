@@ -1,9 +1,16 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino"
 #include <Wire.h>
 #include <Adafruit_LiquidCrystal.h>
 
 // initialize the library with the numbers of the interface pins
 Adafruit_LiquidCrystal lcd(0);
 
+#line 7 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino"
+void setup();
+#line 14 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino"
+void loop();
+#line 7 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino"
 void setup() {
   // set up the LCD's number of rows and columns: 
   lcd.begin(16, 2);
@@ -18,3 +25,4 @@ void loop() {
   // print the number of seconds since reset:
   lcd.print(millis()/1000);
 }
+

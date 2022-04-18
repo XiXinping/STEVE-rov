@@ -1,5 +1,6 @@
-#include <Wire.h>
-#include <Adafruit_LiquidCrystal.h>
+# 1 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino"
+# 2 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino" 2
+# 3 "/home/pi/underwater-rov/src/test_files/arduino_test_files/lcd_test/lcd_test.ino" 2
 
 // initialize the library with the numbers of the interface pins
 Adafruit_LiquidCrystal lcd(0);
