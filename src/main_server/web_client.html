@@ -17,7 +17,9 @@
             var leak_tag = document.getElementById("leak-tag");
             const live_image = document.getElementById("live-image");
 
-            var main_ws = new WebSocket("ws://10.1.57.24:8765");
+            ws_uri = "ws://192.168.0.213:8765";
+
+            var main_ws = new WebSocket(ws_uri);
 
             // tell server what kind of client this is
             const main_client_info = {'client_type': 'web_client_main'};
@@ -25,8 +27,6 @@
                 main_ws.send(JSON.stringify(main_client_info));
             });
             main_ws.onmessage = function (event) {
-                
-            ws.onmessage = function (event) {
                 console.log(typeof(event.data))
                 var arrayBuffer = event.data
                 var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
@@ -42,7 +42,7 @@
                 }
             };
 
-            var camera_ws = new WebSocket("ws://10.1.57.24:8765");
+            var camera_ws = new WebSocket(ws_uri);
             camera_ws.binaryType = 'arraybuffer';
             const camera_client_info = {'client_type': 'web_client_camera'};
             camera_ws.addEventListener('open', (event) =>{
