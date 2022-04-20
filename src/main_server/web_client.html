@@ -3,19 +3,31 @@
     <meta charset="UTF-8">
     <head>
         <title>Underwater ROV Web Client</title>
+        <style media="screen">
+            body {font-family: Arial, Helvetica, sans-serif;
+              color:white;
+              background-color:#0c4c74;}
+        </style>
     </head>
     <body>
         <h1>Underwater ROV</h2>
         <h3>Camera Feed</h3>
         <img id=live-image>
         <h3>Sensor Data</h3>
-        <p id="potentiometer-tag">Potentiometer Data: </p>
         <p id="leak-tag">Leak Sensor: </p>
+        <p id="temperature-tag">Temperature: </p>
+        <p id="current-tag">Current Load: </p>
+        <audio id="alarm-tag">
+            <source src="monkeys-spinning-monkeys.mp3" type="audio/mp3">
+        </audio>
+
         <script>
-            var potentiometer_tag =
-                document.getElementById("potentiometer-tag");
             var leak_tag = document.getElementById("leak-tag");
+            var temperature_tag = document.getElementById("temperature-tag");
+            var current_tag = document.getElementById("current-tag");
             const live_image = document.getElementById("live-image");
+            const alarm = document.getElementById("alarm-tag");
+
 
             ws_uri = "ws://192.168.0.213:8765";
 
@@ -27,22 +39,20 @@
                 main_ws.send(JSON.stringify(main_client_info));
             });
             main_ws.onmessage = function (event) {
-                console.log(typeof(event.data))
-                var arrayBuffer = event.data
-                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
-                live_image.src = window.URL.createObjectURL(blob);
                 var sensor_data = JSON.parse(event.data);
-                potentiometer_tag.innerText = `Potentiometer Data:\
-                ${sensor_data.potentiometer}`;
-                console.log(sensor_data.leak_sensor);
-                if (sensor_data.leak_sensor == true) {
+                if (sensor_data.leak_sensor == true)
+                    audio.play();
                     leak_tag.innerText = 'Leak Sensor: LEAK!!! AAAAAHHHHH!!!';
                 } else {
                     leak_tag.innerText = 'Leak Sensor: No Leak';
                 }
+                temperature_tag.innerText = `Temperature:\
+                ${sensor_data.temperature}°C`;
+                current_tag.innerText = `Current: ${sensor_data.current}A`;
             };
 
             var camera_ws = new WebSocket(ws_uri);
+
             camera_ws.binaryType = 'arraybuffer';
             const camera_client_info = {'client_type': 'web_client_camera'};
             camera_ws.addEventListener('open', (event) =>{

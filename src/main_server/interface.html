@@ -14,7 +14,6 @@
         <h3>Camera Feed</h3>
         <img id=live-image src="hqdefault.jpg">
         <h3>Sensor Data</h3>
-        <p id="potentiometer-tag">Potentiometer Data: </p>
         <p id="leak-tag">Leak Sensor: </p>
         <p id="temperature-tag">Temperature Sensor:</p>
         <p id="current-tag">Current Sensor:</p>
@@ -23,13 +22,15 @@
         </audio>
 
         <script>
-            var potentiometer_tag = document.getElementById("potentiometer-tag");
             var leak_tag = document.getElementById("leak-tag");
             var temp_tag = document.getElementById("temperature-tag");
             var curr_tag = document.getElementById("current-tag");
-            var audio = document.getElementById("audio");
-            audio.play();
             const live_image = document.getElementById("live-image");
+            var audio = document.getElementById("audio");
+
+            audio.play();
+
+            ws_uri = "ws://192.168.0.213:8765";
 
             var main_ws = new WebSocket("ws://10.1.57.24:8765");
 
