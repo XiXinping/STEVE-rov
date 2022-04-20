@@ -156,7 +156,7 @@ def pump_arduino_data(ser):
 async def main_server():
     ser = serial.Serial('/dev/ttyACM0', 115200)
     await asyncio.sleep(1)
-    print("Server started!")
+    print("Server started!!")
     while True:
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = pump_arduino_data(ser)
