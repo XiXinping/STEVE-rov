@@ -4,9 +4,7 @@
     <head>
         <title>Underwater ROV Web Client</title>
         <style media="screen">
-            body {font-family: Arial, Helvetica, sans-serif;
-              color:white;
-              background-color:#0c4c74;}
+            body {font-family: Helvetica, sans-serif;}
         </style>
     </head>
     <body>
@@ -40,7 +38,7 @@
             });
             main_ws.onmessage = function (event) {
                 var sensor_data = JSON.parse(event.data);
-                if (sensor_data.leak_sensor == true)
+                if (sensor_data.leak_sensor == true) {
                     audio.play();
                     leak_tag.innerText = 'Leak Sensor: LEAK!!! AAAAAHHHHH!!!';
                 } else {
@@ -61,7 +59,7 @@
             camera_ws.onmessage = function (event) {
                 console.log(typeof(event.data));
                 var arrayBuffer = event.data;
-                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpeg"});
+                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpg"});
                 live_image.src = window.URL.createObjectURL(blob);
             };
         </script>
