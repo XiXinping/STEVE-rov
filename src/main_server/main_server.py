@@ -81,11 +81,14 @@ class WSServer:
 
 
 class Camera:
-    def __init__(self, width, height):
+    selected_camera = None
+
+    def __init__(self, camera_num):
         print("Initializing camera...")
         pygame.camera.init()
-        camera_name = pygame.camera.list_cameras()[0]
-        self._cam = pygame.camera.Camera(camera_name, (width, height))
+        camera_name = pygame.camera.list_cameras()[camera_num]
+        # pristine DVD video quality
+        self._cam = pygame.camera.Camera(camera_name, (854, 480))
         print("Camera initialized")
         self.is_started = False
         self.stop_requested = False
@@ -125,19 +128,20 @@ class Camera:
         imgstr = pygame.image.tostring(img, "RGB", False)
         pimg = Image.frombytes("RGB", img.get_size(), imgstr)
         with io.BytesIO() as bytesIO:
-            pimg.save(bytesIO, "JPEG", quality=self.quality, optimize=True)
+            # pimg.save(bytesIO, "JPEG", quality=70, optimize=True)
+            pimg.save(bytesIO, "BMP")
             return bytesIO.getvalue()
 
 
 async def camera_server():
-    camera = Camera(854, 480)
+    camera = Camera(0)
     frames_per_second = 60
     camera.request_start()
     while True:
         if WSServer.web_client_camera:
             image_bytes = camera.get_jpeg_image_bytes()
             await WSServer.web_client_camera.send(image_bytes)
-        await asyncio.sleep(1 / frames_per_second)
+        await asyncio.sleep(0.0001)
 
 
 def pump_arduino_data(ser):
