@@ -24,50 +24,61 @@ void fire_motor(int motor_num, int velocity) {
 }
 
 // move the robot left or right
-void move_x(int8_t velocity, int8_t* motor_velocities) {
+void move_x(int8_t velocity, int16_t* motor_velocities) {
     // if the velocity is positive, the robot will move right, if the
     // velocity is negative, the robot will move left
-    motor_velocities[0] += -velocity; // top left motor should fire backwards
+    motor_velocities[0] -= velocity; // top left motor should fire backwards
     motor_velocities[1] += velocity; // top right motor should fire forwards
     motor_velocities[2] += velocity; // bottom left motor should fire forwards
-    motor_velocities[3] += -velocity; // bottom right motor should fire backwards
+    motor_velocities[3] -= velocity; // bottom right motor should fire backwards
 }
 
 // move the robot forward or backward
-void move_y(int8_t velocity, int8_t *motor_velocities) {
+void move_y(int8_t velocity, int16_t *motor_velocities) {
     // positive velocity makes the robot move forward, negative velocity makes
     // the robot move backward
-    motor_velocities[0] += -velocity;
-    motor_velocities[1] += -velocity;
+    motor_velocities[0] -= velocity;
+    motor_velocities[1] -= velocity;
     motor_velocities[2] += velocity;
     motor_velocities[3] += velocity;
 }
 
 // move the robot up or down
-void move_z(int8_t velocity, int8_t* motor_velocities) {
+void move_z(int8_t velocity, int16_t* motor_velocities) {
     // positive velocity makes the robot move up, negative velocity makes the
     // robot move down
-    motor_velocities[4] += -velocity;
-    motor_velocities[5] += -velocity;
+    motor_velocities[4] += velocity;
+    motor_velocities[5] += velocity;
 }
 
 // turn the robot left or right
-void yaw(int8_t velocity, int8_t* motor_velocities) {
+void yaw(int8_t velocity, int16_t* motor_velocities) {
     // positive velocity makes the robot turn right, negative velocity makes
     // the robot turn left
-    motor_velocities[0] += -velocity;
+    motor_velocities[0] -= velocity;
     motor_velocities[1] += velocity;
-    motor_velocities[2] += -velocity;
+    motor_velocities[2] -= velocity;
     motor_velocities[3] += velocity;
 }
 
 void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity,
         int8_t yaw_velocity) {
-    int8_t motor_velocities[] = {0, 0, 0, 0, 0, 0};
+    int16_t motor_velocities[] = {0, 0, 0, 0, 0, 0};
     move_x(x_velocity, motor_velocities);
     move_y(y_velocity, motor_velocities);
     move_z(z_velocity, motor_velocities);
     yaw(yaw_velocity, motor_velocities);
+
+    // make sure motor velocities are within -127 to 127
+    for (uint8_t i; i < 6; i++) {
+        if (motor_velocities[i] > 127) {
+            motor_velocities[i] = 127;
+        } else if (motor_velocities[i] < -127) {
+            motor_velocities[i] = -127;
+        }
+    }
+
+    // drive each motor
     for (uint8_t i; i < 6; i++) {
         fire_motor(i, motor_velocities[i]);
     }
@@ -117,7 +128,7 @@ void setup() {
     lcd.begin(16, 2);
 
     pwm.setOscillatorFrequency(27000000);
-    pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
+    pwm.setPWMFreq(SERVO_FREQ);  // analog servos run at ~50 Hz updates
 
     stop_all();  // make sure all motors are stopped before beginning
 

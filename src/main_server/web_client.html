@@ -4,13 +4,14 @@
     <head>
         <title>Underwater ROV Web Client</title>
         <style media="screen">
-            body {font-family: Helvetica, sans-serif;}
+            body {font-family: Helvetica, sans-serif;
+                  font-size: 1.2em}
         </style>
     </head>
     <body>
-        <h1>Underwater ROV</h2>
+        <h1>Underwater ROV</h1>
         <h3>Camera Feed</h3>
-        <img id=live-image>
+        <img id=live-image style="transform: rotate(180deg)">
         <h3>Sensor Data</h3>
         <p id="leak-tag">Leak Sensor: </p>
         <p id="temperature-tag">Temperature: </p>
@@ -25,6 +26,9 @@
             var current_tag = document.getElementById("current-tag");
             const live_image = document.getElementById("live-image");
             const alarm = document.getElementById("alarm-tag");
+
+            document.querySelector("#live-image").style.transform = 
+                "rotate(180deg)";
 
 
             ws_uri = "ws://192.168.0.213:8765";

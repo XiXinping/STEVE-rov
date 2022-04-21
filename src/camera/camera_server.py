@@ -42,7 +42,7 @@ class Camera:
     def __init__(self, width, height):
         print("Initializing camera...")
         pygame.camera.init()
-        camera_name = pygame.camera.list_cameras()[1]
+        camera_name = pygame.camera.list_cameras()[0]
         self._cam = pygame.camera.Camera(camera_name, (width, height))
         print("Camera initialized")
         self.is_started = False

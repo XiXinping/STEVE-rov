@@ -159,19 +159,20 @@ def pump_arduino_data(ser):
 
 async def main_server():
     ser = serial.Serial('/dev/ttyACM0', 115200)
+    speed = 64  # value from -127 to 127
     await asyncio.sleep(1)
-    print("Server started!!")
+    print("Server started!")
     while True:
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = pump_arduino_data(ser)
         if joystick_data:
-            x_velocity = int(round(joystick_data['axes_coords'][0] * 32))
+            x_velocity = int(round(joystick_data['axes_coords'][0] * speed))
             # the joystick interprets up as -1 and down as 1, the negative just
 
             # reverses this so up is 1 and down is -1
-            y_velocity = int(round(-joystick_data['axes_coords'][1] * 32))
-            z_velocity = joystick_data['dpad_coords'][1] * 32
-            yaw_velocity = int(round(joystick_data['axes_coords'][2] * 32))
+            y_velocity = int(round(-joystick_data['axes_coords'][1] * speed))
+            z_velocity = joystick_data['dpad_coords'][1] * speed
+            yaw_velocity = int(round(joystick_data['axes_coords'][2] * speed))
             arduino_velocity_data = {
                 "x": x_velocity, "y": y_velocity,
                 "z": z_velocity, "yaw": yaw_velocity}
