@@ -6,6 +6,8 @@ int lgmp = 9;
 int lgmn = 8;
 int lsmp = 7;
 int lsmn = 6;
+
+
 bool RB = false; //Right bumper
 bool LB = false; //Left bumper
 bool RT = false; //Right trigger
