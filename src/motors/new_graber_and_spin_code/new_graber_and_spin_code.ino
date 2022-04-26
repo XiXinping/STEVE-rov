@@ -4,8 +4,8 @@ int SpinMotorPos = 11; //right spin motor positive
 int SpinMotorNeg = 10;
 int MPWM = 5; //motor power;
 bool CloseGrabInput=false; //grab toggle
-bool SpinRightInput=false; //spin right
-bool SpinLeftInput=false; //spin left
+bool SpinLeftInput=false; //spin right
+bool SpinRightInput=false; //spin left
 
 
 
@@ -16,8 +16,8 @@ void setup() {
   pinMode(SpinMotorPos, OUTPUT);
   pinMode(SpinMotorNeg, OUTPUT);
   pinMode(MPWM, OUTPUT);
-  analogWrite(MPWM, 40);
-  
+  analogWrite(MPWM, 55);
+
 
 }
 void grab(){
@@ -31,13 +31,13 @@ void grab(){
   }
 }
 void spin(){
-  if (SpinRightInput){
-    digitalWrite(SpinMotorPos, HIGH);
-    digitalWrite(SpinMotorNeg, LOW);
-  }
-  else if (SpinLeftInput){
+  if (SpinLeftInput){
     digitalWrite(SpinMotorPos, LOW);
     digitalWrite(SpinMotorNeg, HIGH);
+  }
+  else if (SpinRightInput){
+    digitalWrite(SpinMotorPos, HIGH);
+    digitalWrite(SpinMotorNeg, LOW);
   }
   else{
     digitalWrite(SpinMotorPos, LOW);
@@ -47,12 +47,24 @@ void spin(){
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(5000);
-  CloseGrabInput=true;
   grab();
   spin();
   delay(5000);
+  CloseGrabInput=true;
+  SpinRightInput=true;
+  grab();
+  spin();
+  delay(5000);
+  SpinLeftInput=true;
+  grab();
+  spin();
+  delay(5000);
+  SpinRightInput=false;
   CloseGrabInput=false;
+  grab();
+  spin();
+  delay(5000);
+  SpinLeftInput=false;
   grab();
   spin();
   
