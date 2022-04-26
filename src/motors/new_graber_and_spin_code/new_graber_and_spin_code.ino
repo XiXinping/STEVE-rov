@@ -1,11 +1,13 @@
-int GrabMotorPos = 3; //right grab motor positive
-int GrabMotorNeg = 4; //right grab motor negative
-int SpinMotorPos = 11; //right spin motor positive
-int SpinMotorNeg = 10;
-int MPWM = 5; //motor power;
+int GrabMotorPos = 3;   //blue/in3/out3
+int GrabMotorNeg = 4;   //green/in4/out4
+int SpinMotorPos = 11;  //in1/red
+int SpinMotorNeg = 10;  //in2/black
+int GrabCurrentControl = 5; //ENB !needs to be capable of analog
+int SpinCurrentControl = 6; //ENA !needs to be capable of analog
 bool CloseGrabInput=false; //grab toggle
-bool SpinLeftInput=false; //spin right
-bool SpinRightInput=false; //spin left
+bool SpinLeftInput=false;   //spin right
+bool SpinRightInput=false;  //spin left
+
 
 
 
@@ -15,8 +17,10 @@ void setup() {
   pinMode(GrabMotorNeg, OUTPUT);
   pinMode(SpinMotorPos, OUTPUT);
   pinMode(SpinMotorNeg, OUTPUT);
-  pinMode(MPWM, OUTPUT);
-  analogWrite(MPWM, 55);
+  pinMode(GrabCurrentControl, OUTPUT);
+  pinMode(SpinCurrentControl, OUTPUT);
+  analogWrite(GrabCurrentControl, 55);  //255=5v
+  analogWrite(SpinCurrentControl, 255); //255=5v
 
 
 }
