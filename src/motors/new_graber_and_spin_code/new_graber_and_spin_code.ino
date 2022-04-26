@@ -36,12 +36,18 @@ void grab(){
 }
 void spin(){
   if (SpinLeftInput){
-    digitalWrite(SpinMotorPos, LOW);
-    digitalWrite(SpinMotorNeg, HIGH);
-  }
-  else if (SpinRightInput){
+    if (SpinRightInput){
+      digitalWrite(SpinMotorPos, LOW);
+      digitalWrite(SpinMotorNeg, LOW);
+    }
+    else{
     digitalWrite(SpinMotorPos, HIGH);
     digitalWrite(SpinMotorNeg, LOW);
+    }
+  }
+  else if (SpinRightInput){
+    digitalWrite(SpinMotorPos, LOW);
+    digitalWrite(SpinMotorNeg, HIGH);
   }
   else{
     digitalWrite(SpinMotorPos, LOW);
