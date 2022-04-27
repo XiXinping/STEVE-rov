@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <ArduinoJson.h>
@@ -30,6 +32,33 @@ int8_t grab = 0; // grab toggle
 int8_t rotate_direction = 0;   //spin right
 
 
+#line 33 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void rotate_gripper(int8_t rotate_direction);
+#line 53 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void drive_gripper(int8_t grab);
+#line 79 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void toggle_light(bool light);
+#line 88 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void fire_motor(int motor_num, int velocity);
+#line 95 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_x(int8_t velocity, int8_t* motor_velocities);
+#line 105 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_y(int8_t velocity, int8_t *motor_velocities);
+#line 115 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void move_z(int8_t velocity, int8_t* motor_velocities);
+#line 123 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void yaw(int8_t velocity, int8_t* motor_velocities);
+#line 132 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity, int8_t yaw_velocity);
+#line 153 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void stop_all();
+#line 159 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void print_velocities(int x_velocity, int y_velocity, int z_velocity, int yaw_velocity);
+#line 187 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void setup();
+#line 244 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+void loop();
+#line 33 "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
 void rotate_gripper(int8_t rotate_direction) {
     switch(rotate_direction) {
         case -1:  // rotate left
@@ -276,3 +305,4 @@ void loop() {
     /*print_velocities(x_velocity, y_velocity, z_velocity, yaw_velocity);*/
     delay(10);
 }
+

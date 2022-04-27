@@ -11,7 +11,7 @@ async def main():
     # initializing the joystick
     joystick = pygame.joystick.Joystick(0)
     # websockets uri
-    uri = "ws://10.1.57.24:8765"
+    uri = "ws://192.168.0.213:8765"
     client_info = {"client_info": "joystick"}
     # main event loop
     async with websockets.connect(uri) as websocket:

@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
 const int grab_motor_pos = 3;   //blue/in3/out3
 const int grab_motor_neg = 4;   //green/in4/out4
 const int spin_motor_pos = 11;  //in1/red
@@ -9,6 +11,19 @@ bool gripper_close = false; //grab toggle
 int8_t rotate_direction = -1;   //spin right
 
 
+#line 12 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
+void rotate_gripper(int8_t rotate_direction);
+#line 32 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
+void drive_gripper(bool grab);
+#line 42 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
+void toggle_light(bool light);
+#line 50 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
+void setup();
+#line 62 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
+void spin();
+#line 83 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
+void loop();
+#line 12 "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/new_graber_and_spin_code.ino"
 void rotate_gripper(int8_t rotate_direction) {
     switch(rotate_direction) {
         case -1:  // rotate left
@@ -48,6 +63,7 @@ void toggle_light(bool light) {
 }
 
 void setup() {
+    // put your setup code here, to run once:
     pinMode(grab_motor_pos, OUTPUT);
     pinMode(grab_motor_neg, OUTPUT);
     pinMode(spin_motor_pos, OUTPUT);
@@ -102,3 +118,4 @@ void loop() {
     delay(2000);
     
 }
+

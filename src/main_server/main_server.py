@@ -32,7 +32,7 @@ class WSServer:
         print("Joystick client connected")
         async for message in websocket:
             cls.joystick_data = json.loads(message)
-            print(cls.joystick_data)
+            # print(cls.joystick_data)
         cls.joystick_client = None
 
     @classmethod
@@ -160,6 +160,8 @@ def pump_arduino_data(ser):
 async def main_server():
     ser = serial.Serial('/dev/ttyACM0', 115200)
     speed = 64  # value from -127 to 127
+    # store the last set of arduino commands to see if anything changes
+    prev_arduino_commands = None
     await asyncio.sleep(1)
     print("Server started!")
     while True:
@@ -168,17 +170,32 @@ async def main_server():
         if joystick_data:
             x_velocity = int(round(joystick_data['axes_coords'][0] * speed))
             # the joystick interprets up as -1 and down as 1, the negative just
-
             # reverses this so up is 1 and down is -1
             y_velocity = int(round(-joystick_data['axes_coords'][1] * speed))
-            z_velocity = joystick_data['dpad_coords'][1] * speed
+            z_velocity = int(round(-joystick_data['axes_coords'][3] * speed))
             yaw_velocity = int(round(joystick_data['axes_coords'][2] * speed))
-            arduino_velocity_data = {
-                "x": x_velocity, "y": y_velocity,
-                "z": z_velocity, "yaw": yaw_velocity}
-            arduino_velocity_send = json.dumps(arduino_velocity_data) + '\n'
-            print(f'{time.time()} | {arduino_velocity_data}')
-            ser.write(arduino_velocity_send.encode('ascii'))
+            # light = bool(joystick_data['button_values'][0])
+            gripper_grab = joystick_data['button_values'][7] - \
+                joystick_data['button_values'][6]
+            # rotate left if negative, rotate right if positive
+            gripper_rotate = joystick_data['button_values'][5] - \
+                joystick_data['button_values'][4]
+
+            # arduino_commands = {
+            # "x": x_velocity, "y": y_velocity,
+            # "z": z_velocity, "yaw": yaw_velocity,
+            # "light": light, "grab": gripper_grab,
+            # "rotate": gripper_rotate
+            # }
+            arduino_commands = {
+                "x": x_velocity, "y": y_velocity, "z": z_velocity,
+                "w": yaw_velocity, "g": gripper_grab, "r": gripper_rotate
+            }
+            # only send the data if something has changed
+            if arduino_commands != prev_arduino_commands:
+                arduino_commands_send = json.dumps(arduino_commands) + '\n'
+                ser.write(arduino_commands_send.encode('ascii'))
+                prev_arduino_commands = arduino_commands
         # if arduino_data:
         # print(arduino_data)
         # if WSServer.web_client_main:
