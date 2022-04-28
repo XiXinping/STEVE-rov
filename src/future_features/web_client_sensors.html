@@ -15,7 +15,16 @@
         <h1>Underwater ROV</h1>
         <h3>Camera Feed</h3>
         <img id=live-image style="transform: rotate(180deg)" alt="Camera feed
-        unavailable">
-    <script src="web_client.js">
+        not working">
+        <h3>Sensor Data</h3>
+        <p id="leak-tag">Leak Sensor: </p>
+        <p id="temperature-tag">Temperature: </p>
+        <p id="current-tag">Current Load: </p>
+        <!--<audio id="alarm-tag">-->
+            <!--<source src="monkeys-spinning-monkeys.mp3" type="audio/mp3">-->
+        <!--</audio>-->
+        <button type="button" onclick="arrayBuffer = null">Refresh</button>
+
+    <script src="web_client.js?n=1">
     </body>
 </html>
