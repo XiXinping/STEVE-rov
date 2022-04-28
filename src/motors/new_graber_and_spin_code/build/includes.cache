@@ -1,0 +1,17 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.4/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/pi/underwater-rov/src/motors/new_graber_and_spin_code/build/sketch/new_graber_and_spin_code.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

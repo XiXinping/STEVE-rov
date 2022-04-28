@@ -3,6 +3,9 @@
     <meta charset="UTF-8">
     <head>
         <title>Underwater ROV Web Client</title>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0"/>
         <style media="screen">
             body {font-family: Helvetica, sans-serif;
                   font-size: 1.2em}
@@ -11,61 +14,17 @@
     <body>
         <h1>Underwater ROV</h1>
         <h3>Camera Feed</h3>
-        <img id=live-image style="transform: rotate(180deg)">
+        <img id=live-image style="transform: rotate(180deg)" alt="Camera feed
+        not working">
         <h3>Sensor Data</h3>
         <p id="leak-tag">Leak Sensor: </p>
         <p id="temperature-tag">Temperature: </p>
         <p id="current-tag">Current Load: </p>
-        <audio id="alarm-tag">
-            <source src="monkeys-spinning-monkeys.mp3" type="audio/mp3">
-        </audio>
+        <!--<audio id="alarm-tag">-->
+            <!--<source src="monkeys-spinning-monkeys.mp3" type="audio/mp3">-->
+        <!--</audio>-->
+        <button type="button" onclick="arrayBuffer = null">Refresh</button>
 
-        <script>
-            var leak_tag = document.getElementById("leak-tag");
-            var temperature_tag = document.getElementById("temperature-tag");
-            var current_tag = document.getElementById("current-tag");
-            const live_image = document.getElementById("live-image");
-            const alarm = document.getElementById("alarm-tag");
-
-            document.querySelector("#live-image").style.transform = 
-                "rotate(180deg)";
-
-
-            ws_uri = "ws://192.168.0.213:8765";
-
-            var main_ws = new WebSocket(ws_uri);
-
-            // tell server what kind of client this is
-            const main_client_info = {'client_type': 'web_client_main'};
-            main_ws.addEventListener('open', (event) => {
-                main_ws.send(JSON.stringify(main_client_info));
-            });
-            main_ws.onmessage = function (event) {
-                var sensor_data = JSON.parse(event.data);
-                if (sensor_data.leak_sensor == true) {
-                    audio.play();
-                    leak_tag.innerText = 'Leak Sensor: LEAK!!! AAAAAHHHHH!!!';
-                } else {
-                    leak_tag.innerText = 'Leak Sensor: No Leak';
-                }
-                temperature_tag.innerText = `Temperature:\
-                ${sensor_data.temperature}°C`;
-                current_tag.innerText = `Current: ${sensor_data.current}A`;
-            };
-
-            var camera_ws = new WebSocket(ws_uri);
-
-            camera_ws.binaryType = 'arraybuffer';
-            const camera_client_info = {'client_type': 'web_client_camera'};
-            camera_ws.addEventListener('open', (event) =>{
-                camera_ws.send(JSON.stringify(camera_client_info));
-            });
-            camera_ws.onmessage = function (event) {
-                console.log(typeof(event.data));
-                var arrayBuffer = event.data;
-                var blob  = new Blob([new Uint8Array(arrayBuffer)], {type: "image/jpg"});
-                live_image.src = window.URL.createObjectURL(blob);
-            };
-        </script>
+    <script src="web_client.js?n=1">
     </body>
 </html>

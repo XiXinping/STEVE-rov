@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include <ArduinoJson.h>
@@ -12,79 +14,33 @@ Adafruit_LiquidCrystal lcd(0);
 #define USMAX 1900 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
 
+////////////////////////////////////////////////////////////////////////////////////
 int8_t minIn = -127;  //the minimum input value for the motor speed
 int8_t maxIn = 127; //the maximum input value for the motor speed
-
-const int grab_motor_pos = 3;   //blue/in3/out3
-const int grab_motor_neg = 4;   //green/in4/out4
-const int spin_motor_pos = 11;  //in1/red
-const int spin_motor_neg = 10;  //in2/black
-const int grab_current_control = 5; //ENB !needs to be capable of analog
-const int spin_current_control = 6; //ENA !needs to be capable of analog
-
-int x_velocity = 0;
-int y_velocity = 0;
-int z_velocity = 0;
-int yaw_velocity = 0;
-int8_t grab = 0; // grab toggle
-int8_t rotate_direction = 0;   //spin right
+////////////////////////////////////////////////////////////////////////////////////
 
 
-void rotate_gripper(int8_t rotate_direction) {
-    switch(rotate_direction) {
-        case -1:  // rotate left
-            digitalWrite(spin_motor_pos, LOW);
-            digitalWrite(spin_motor_neg, HIGH);
-            break;
-        case 0:  // stop rotating
-            digitalWrite(spin_motor_pos, LOW);
-            digitalWrite(spin_motor_neg, LOW);
-            break;
-        case 1:  // rotate right
-            digitalWrite(spin_motor_pos, HIGH);
-            digitalWrite(spin_motor_neg, LOW);
-            break;
-        default:
-            break;
-    }
-
-}
-
-void drive_gripper(int8_t grab) {
-    /*if (grab) {  // close the gripper*/
-        /*digitalWrite(grab_motor_pos, HIGH);*/
-        /*digitalWrite(grab_motor_neg, LOW);*/
-    /*} else {  // open the gripper*/
-        /*digitalWrite(grab_motor_pos, LOW);*/
-        /*digitalWrite(grab_motor_neg, HIGH);*/
-    /*}*/
-    switch(grab) {
-        case -1:  // open the claw
-            digitalWrite(grab_motor_pos, HIGH);
-            digitalWrite(grab_motor_neg, LOW);
-            break;
-        case 0:  // do nothing
-            digitalWrite(grab_motor_pos, LOW);
-            digitalWrite(grab_motor_neg, LOW);
-            break;
-        case 1:  // cloes the claw
-            digitalWrite(grab_motor_pos, LOW);
-            digitalWrite(grab_motor_neg, HIGH);
-            break;
-        default:
-            break;
-    }
-}
-
-void toggle_light(bool light) {
-    if (light) {
-        digitalWrite(2, HIGH); 
-    } else {
-        digitalWrite(2, LOW);
-    }
-}
-
-
+#line 21 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void fire_motor(int motor_num, int velocity);
+#line 28 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void move_x(int8_t velocity, int8_t* motor_velocities);
+#line 38 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void move_y(int8_t velocity, int8_t *motor_velocities);
+#line 48 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void move_z(int8_t velocity, int8_t* motor_velocities);
+#line 56 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void yaw(int8_t velocity, int8_t* motor_velocities);
+#line 65 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity, int8_t yaw_velocity);
+#line 86 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void stop_all();
+#line 92 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void print_velocities(int x_velocity, int y_velocity, int z_velocity, int yaw_velocity);
+#line 124 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void setup();
+#line 170 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
+void loop();
+#line 21 "/home/pi/underwater-rov/src/motors/motor_test_test/motor_test_test.ino"
 void fire_motor(int motor_num, int velocity) {
     // convert the velocity into a microsecond delay that the motor can use
     int microsecond_delay = map(velocity, -127, 127, USMIN, USMAX);
@@ -125,8 +81,8 @@ void yaw(int8_t velocity, int8_t* motor_velocities) {
     // the robot turn left
     motor_velocities[0] += -velocity;
     motor_velocities[1] += velocity;
-    motor_velocities[2] += velocity;
-    motor_velocities[3] += -velocity;
+    motor_velocities[2] += -velocity;
+    motor_velocities[3] += velocity;
 }
 
 void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity,
@@ -183,17 +139,12 @@ void print_velocities(int x_velocity, int y_velocity, int z_velocity,
 
 String receive_joystick_data = "";
 
+int x_velocity = 0;
+int y_velocity = 0;
+int z_velocity = 0;
+int yaw_velocity = 0;
 
 void setup() {
-    pinMode(grab_motor_pos, OUTPUT);
-    pinMode(grab_motor_neg, OUTPUT);
-    pinMode(spin_motor_pos, OUTPUT);
-    pinMode(spin_motor_neg, OUTPUT);
-    pinMode(grab_current_control, OUTPUT);
-    pinMode(spin_current_control, OUTPUT);
-    analogWrite(grab_current_control, 128);  // 255 = 5V
-    analogWrite(spin_current_control, 255); // 255 = 5V
-
     Serial.begin(115200);
 
     pwm.begin();
@@ -203,8 +154,6 @@ void setup() {
     pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
 
     stop_all();
-    drive_gripper(0);
-    rotate_gripper(0);
 
     lcd.print("S.T.E.V.E  ROV");
     lcd.setCursor(0, 1);
@@ -263,16 +212,14 @@ void loop() {
         x_velocity = doc["x"];
         y_velocity = doc["y"];
         z_velocity = doc["z"];
-        yaw_velocity = doc["w"];
-        grab = doc["g"];
-        rotate_direction = doc["r"];
+        yaw_velocity = doc["yaw"];
+
 
         receive_joystick_data = "";
     }
 
     drive_motors(x_velocity, y_velocity, z_velocity, yaw_velocity);
-    drive_gripper(grab);
-    rotate_gripper(rotate_direction);
     /*print_velocities(x_velocity, y_velocity, z_velocity, yaw_velocity);*/
     delay(10);
 }
+

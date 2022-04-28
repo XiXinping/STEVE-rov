@@ -1,0 +1,12 @@
+{
+  "additionalFiles": "",
+  "builtInLibrariesFolders": "",
+  "builtInToolsFolders": "",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "build.warn_data_percentage=75",
+  "fqbn": "arduino:avr:uno",
+  "hardwareFolders": "/home/pi/.arduino15/packages",
+  "otherLibrariesFolders": "/home/pi/Arduino/libraries",
+  "runtime.ide.version": "10607",
+  "sketchLocation": "/home/pi/underwater-rov/src/motors/motor_test/motor_test.ino"
+}
