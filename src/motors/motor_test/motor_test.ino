@@ -191,7 +191,11 @@ void setup() {
     pinMode(spin_motor_neg, OUTPUT);
     pinMode(grab_current_control, OUTPUT);
     pinMode(spin_current_control, OUTPUT);
+<<<<<<< HEAD
     analogWrite(grab_current_control, 128);  // 255 = 5V
+=======
+    analogWrite(grab_current_control, 55);  // 255 = 5V
+>>>>>>> 6fc49764be96058286dfec81454deb2445805fb4
     analogWrite(spin_current_control, 255); // 255 = 5V
 
     Serial.begin(115200);
