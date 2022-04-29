@@ -162,7 +162,7 @@ def pump_arduino_data(ser):
 
 async def main_server():
     ser = serial.Serial('/dev/ttyACM0', 115200)
-    speed = 64  # value from -127 to 127
+    speed = 32  # value from -127 to 127
     # store the last set of arduino commands to see if anything changes
     prev_arduino_commands = None
     await asyncio.sleep(1)
@@ -175,8 +175,10 @@ async def main_server():
             # the joystick interprets up as -1 and down as 1, the negative just
             # reverses this so up is 1 and down is -1
             y_velocity = int(round(-joystick_data['axes_coords'][1] * speed))
-            z_velocity = int(round(-joystick_data['axes_coords'][3] * speed))
-            yaw_velocity = int(round(joystick_data['axes_coords'][2] * speed))
+            z_velocity = int(
+                round(-joystick_data['axes_coords'][3] * speed * 2))
+            yaw_velocity = int(
+                round(joystick_data['axes_coords'][2] * speed))
             # light = bool(joystick_data['button_values'][0])
             gripper_grab = joystick_data['button_values'][7] - \
                 joystick_data['button_values'][6]

@@ -1,24 +1,25 @@
-#include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
-#include <ArduinoJson.h>
-#include <Adafruit_LiquidCrystal.h>
+# 1 "/home/pi/underwater-rov1/src/motors/motor_test/motor_test.ino"
+# 2 "/home/pi/underwater-rov1/src/motors/motor_test/motor_test.ino" 2
+# 3 "/home/pi/underwater-rov1/src/motors/motor_test/motor_test.ino" 2
+# 4 "/home/pi/underwater-rov1/src/motors/motor_test/motor_test.ino" 2
+# 5 "/home/pi/underwater-rov1/src/motors/motor_test/motor_test.ino" 2
 // called this way, it uses the default address 0x40
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Adafruit_LiquidCrystal lcd(0);
 
-#define SERVOMIN 150 // This is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX 600 // This is the 'maximum' pulse length count (out of 4096)
-#define USMIN 1100 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
-#define USMAX 1900 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
-#define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
 
-int8_t minIn = -127;  //the minimum input value for the motor speed
+
+
+
+
+
+int8_t minIn = -127; //the minimum input value for the motor speed
 int8_t maxIn = 127; //the maximum input value for the motor speed
 
-const int grab_motor_pos = 3;   //blue/in3/out3
-const int grab_motor_neg = 4;   //green/in4/out4
-const int spin_motor_pos = 11;  //in1/red
-const int spin_motor_neg = 10;  //in2/black
+const int grab_motor_pos = 3; //blue/in3/out3
+const int grab_motor_neg = 4; //green/in4/out4
+const int spin_motor_pos = 11; //in1/red
+const int spin_motor_neg = 10; //in2/black
 const int grab_current_control = 5; //ENB !needs to be capable of analog
 const int spin_current_control = 6; //ENA !needs to be capable of analog
 
@@ -27,22 +28,22 @@ int y_velocity = 0;
 int z_velocity = 0;
 int yaw_velocity = 0;
 int8_t grab = 0; // grab toggle
-int8_t rotate_direction = 0;   //spin right
+int8_t rotate_direction = 0; //spin right
 
 
 void rotate_gripper(int8_t rotate_direction) {
     switch(rotate_direction) {
-        case -1:  // rotate left
-            digitalWrite(spin_motor_pos, LOW);
-            digitalWrite(spin_motor_neg, HIGH);
+        case -1: // rotate left
+            digitalWrite(spin_motor_pos, 0x0);
+            digitalWrite(spin_motor_neg, 0x1);
             break;
-        case 0:  // stop rotating
-            digitalWrite(spin_motor_pos, LOW);
-            digitalWrite(spin_motor_neg, LOW);
+        case 0: // stop rotating
+            digitalWrite(spin_motor_pos, 0x0);
+            digitalWrite(spin_motor_neg, 0x0);
             break;
-        case 1:  // rotate right
-            digitalWrite(spin_motor_pos, HIGH);
-            digitalWrite(spin_motor_neg, LOW);
+        case 1: // rotate right
+            digitalWrite(spin_motor_pos, 0x1);
+            digitalWrite(spin_motor_neg, 0x0);
             break;
         default:
             break;
@@ -59,17 +60,17 @@ void drive_gripper(int8_t grab) {
         /*digitalWrite(grab_motor_neg, HIGH);*/
     /*}*/
     switch(grab) {
-        case -1:  // open the claw
-            digitalWrite(grab_motor_pos, HIGH);
-            digitalWrite(grab_motor_neg, LOW);
+        case -1: // open the claw
+            digitalWrite(grab_motor_pos, 0x1);
+            digitalWrite(grab_motor_neg, 0x0);
             break;
-        case 0:  // do nothing
-            digitalWrite(grab_motor_pos, LOW);
-            digitalWrite(grab_motor_neg, LOW);
+        case 0: // do nothing
+            digitalWrite(grab_motor_pos, 0x0);
+            digitalWrite(grab_motor_neg, 0x0);
             break;
-        case 1:  // cloes the claw
-            digitalWrite(grab_motor_pos, LOW);
-            digitalWrite(grab_motor_neg, HIGH);
+        case 1: // cloes the claw
+            digitalWrite(grab_motor_pos, 0x0);
+            digitalWrite(grab_motor_neg, 0x1);
             break;
         default:
             break;
@@ -78,16 +79,16 @@ void drive_gripper(int8_t grab) {
 
 void toggle_light(bool light) {
     if (light) {
-        digitalWrite(2, HIGH); 
+        digitalWrite(2, 0x1);
     } else {
-        digitalWrite(2, LOW);
+        digitalWrite(2, 0x0);
     }
 }
 
 
 void fire_motor(int motor_num, int velocity) {
     // convert the velocity into a microsecond delay that the motor can use
-    int microsecond_delay = map(velocity, -127, 127, USMIN, USMAX);
+    int microsecond_delay = map(velocity, -127, 127, 1100 /* This is the rounded 'minimum' microsecond length based on the minimum pulse of 150*/, 1900 /* This is the rounded 'maximum' microsecond length based on the maximum pulse of 600*/);
     pwm.writeMicroseconds(motor_num, microsecond_delay);
 }
 
@@ -185,13 +186,13 @@ String receive_joystick_data = "";
 
 
 void setup() {
-    pinMode(grab_motor_pos, OUTPUT);
-    pinMode(grab_motor_neg, OUTPUT);
-    pinMode(spin_motor_pos, OUTPUT);
-    pinMode(spin_motor_neg, OUTPUT);
-    pinMode(grab_current_control, OUTPUT);
-    pinMode(spin_current_control, OUTPUT);
-    analogWrite(grab_current_control, 180);  // 255 = 5V
+    pinMode(grab_motor_pos, 0x1);
+    pinMode(grab_motor_neg, 0x1);
+    pinMode(spin_motor_pos, 0x1);
+    pinMode(spin_motor_neg, 0x1);
+    pinMode(grab_current_control, 0x1);
+    pinMode(spin_current_control, 0x1);
+    analogWrite(grab_current_control, 180); // 255 = 5V
     analogWrite(spin_current_control, 255); // 255 = 5V
 
     Serial.begin(115200);
@@ -200,7 +201,7 @@ void setup() {
     lcd.begin(16, 2);
 
     pwm.setOscillatorFrequency(27000000);
-    pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
+    pwm.setPWMFreq(50 /* Analog servos run at ~50 Hz updates*/); // Analog servos run at ~50 Hz updates
 
     stop_all();
     drive_gripper(0);
@@ -244,21 +245,21 @@ void setup() {
 void loop() {
     if(Serial.available() > 0) {
         receive_joystick_data = Serial.readStringUntil('\n');
-                                                                                 
+
         // creates a json document on the stack                                     
-        StaticJsonDocument<256> doc;                                            
- 
+        StaticJsonDocument<256> doc;
+
         // deserializeJson() doesn't throw errors, rather they can be collected in this variable of the the type DeserializationError
-        DeserializationError err = deserializeJson(doc, receive_joystick_data);                
-        if(err) {                                                                   
-            Serial.print("Error: ");                                                
+        DeserializationError err = deserializeJson(doc, receive_joystick_data);
+        if(err) {
+            Serial.print("Error: ");
             Serial.println(err.c_str());
             /*lcd.setCursor(1, 0);*/
             /*lcd.print("Error: ");*/
             /*lcd.setCursor(1, 1);*/
             /*lcd.print(err.c_str());*/
-            return;                                                                 
-        }                                                                           
+            return;
+        }
         // parses data from the json document and stores them as variables          
         x_velocity = doc["x"];
         y_velocity = doc["y"];
