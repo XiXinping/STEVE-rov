@@ -4,7 +4,7 @@ document.querySelector("#live-image").style.transform =
     "rotate(180deg)";
 
 
-ws_uri = "ws://192.168.0.213:8765";
+ws_uri = "ws://10.0.0.27:8765";
 
 var camera_ws = new WebSocket(ws_uri);
 
