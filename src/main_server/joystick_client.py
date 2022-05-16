@@ -25,8 +25,8 @@ async def main():
             axes_coords = [joystick.get_axis(i) for i in
                            range(joystick.get_numaxes())]
             dpad_coords = joystick.get_hat(0)
-            joystick_data = {"button_values": button_values, "axes_coords":
-                             axes_coords, "dpad_coords": dpad_coords}
+            joystick_data = {"buttons": button_values, "axes":
+                             axes_coords, "dpad": dpad_coords}
             print(joystick_data)
             # converts dictionary into json and sends it to server
             await websocket.send(json.dumps(joystick_data))
