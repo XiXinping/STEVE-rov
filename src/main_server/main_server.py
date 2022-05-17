@@ -162,11 +162,11 @@ def pump_arduino_data(ser):
 
 async def main_server():
     ser = serial.Serial('/dev/ttyACM0', 115200)
-    speed = 64  # value from -127 to 127
+    velocity_multiplier = 64  # value from -127 to 127
     # store the last set of arduino commands to see if anything changes
     prev_arduino_commands = None
     # store the previous joystick data to check for changes
-    prev_speed_toggle = None
+    prev_velocity_toggle = None
 
     await asyncio.sleep(1)
     print("Server started!")
@@ -174,21 +174,21 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
         # arduino_data = pump_arduino_data(ser)
         if joystick_data:
-            x_velocity = int(round(joystick_data['axes'][0] * speed))
+            x_velocity = round(joystick_data['axes'][0] * velocity_multiplier)
             # the joystick interprets up as -1 and down as 1, the negative just
             # reverses this so up is 1 and down is -1
-            y_velocity = int(round(-joystick_data['axes'][1] * speed))
-            z_velocity = int(
-                round(-joystick_data['axes'][3] * speed * 2))
-            yaw_velocity = int(
-                round(joystick_data['axes'][2] * speed))
+            y_velocity = round(-joystick_data['axes'][1] * velocity_multiplier)
+            z_velocity = round(-joystick_data['axes'][3]
+                               * velocity_multiplier * 2)
+            yaw_velocity = round(joystick_data['axes'][2]
+                                 * velocity_multiplier)
             # light = bool(joystick_data['button_values'][0])
             gripper_grab = joystick_data['buttons'][7] - \
                 joystick_data['buttons'][6]
             # rotate left if negative, rotate right if positive
             gripper_rotate = joystick_data['buttons'][5] - \
                 joystick_data['buttons'][4]
-            speed_toggle = joystick_data['dpad'][1]
+            velocity_toggle = joystick_data['dpad'][1]
 
             arduino_commands = {
                 "x": x_velocity, "y": y_velocity, "z": z_velocity,
@@ -201,15 +201,15 @@ async def main_server():
                 prev_arduino_commands = arduino_commands
 
             # increase or decrease speed when the dpad buttons are pressed
-            if speed_toggle != prev_speed_toggle:
-                # make sure speed doesn't exceed 128
-                if speed_toggle > 0 and speed <= 64:
-                    speed *= 2
-                # make sure speed doesn't fall below 16
-                if speed_toggle < 0 and speed >= 32:
-                    speed //= 2
+            if velocity_toggle != prev_velocity_toggle:
+                # make sure velocity doesn't exceed 128
+                if velocity_toggle > 0 and velocity_multiplier <= 64:
+                    velocity_multiplier *= 2
+                # make sure velocity doesn't fall below 16
+                if velocity_toggle < 0 and velocity_multiplier >= 32:
+                    velocity_multiplier //= 2
+                prev_velocity_toggle = velocity_toggle
 
-            prev_speed_toggle = speed_toggle
         # if arduino_data:
         # print(arduino_data)
         # if WSServer.web_client_main:
