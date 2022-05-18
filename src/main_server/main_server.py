@@ -1,9 +1,6 @@
 import asyncio
 import io
 import json
-from PIL import Image
-import pygame.camera
-import pygame.image
 import serial
 import time
 import websockets
@@ -78,73 +75,6 @@ class WSServer:
             await cls.web_client_main_handler(websocket, path)
         elif client_type == "web_client_camera":
             await cls.web_client_camera_handler(websocket, path)
-
-
-class Camera:
-    selected_camera = None
-
-    def __init__(self, camera_num):
-        print("Initializing camera...")
-        pygame.camera.init()
-        camera_name = pygame.camera.list_cameras()[camera_num]
-        # pristine DVD video quality
-        self._cam = pygame.camera.Camera(camera_name, (854, 480))
-        print("Camera initialized")
-        self.is_started = False
-        self.stop_requested = False
-        self.quality = 70  # JPEG quality from 1 (worst) to 100 (best)
-        self.stopdelay = 5  # delay in seconds before the camera shuts down
-        # after all clients have disconnected
-
-    def request_start(self):
-        if self.stop_requested:
-            print("Camera continues to be in use")
-            self.stop_requested = False
-        if not self.is_started:
-            self._start()
-
-    def request_stop(self):
-        if self.is_started and not self.stop_requested:
-            self.stop_requested = True
-            print("Stopping camera in " + str(self.stopdelay) + " seconds...")
-            self._stop()
-
-    def _start(self):
-        print("Starting camera...")
-        self._cam.start()
-        print("Camera started")
-        self.is_started = True
-
-    def _stop(self):
-        if self.stop_requested:
-            print("Stopping camera now...")
-            self._cam.stop()
-            print("Camera stopped")
-            self.is_started = False
-            self.stop_requested = False
-
-    def get_jpeg_image_bytes(self):
-        img = self._cam.get_image()
-        imgstr = pygame.image.tostring(img, "RGB", False)
-        pimg = Image.frombytes("RGB", img.get_size(), imgstr)
-        with io.BytesIO() as bytesIO:
-            pimg.save(bytesIO, "JPEG", quality=60, optimize=True)
-            # pimg.save(bytesIO, "BMP")
-            return bytesIO.getvalue()
-
-
-async def camera_server():
-    camera = Camera(0)
-    frames_per_second = 60
-    camera.request_start()
-    while True:
-        if WSServer.web_client_camera:
-            image_bytes = camera.get_jpeg_image_bytes()
-            try:
-                await WSServer.web_client_camera.send(image_bytes)
-            except websockets.connection.ConnectionClosed:
-                pass
-        await asyncio.sleep(0.0001)
 
 
 def pump_arduino_data(ser):
@@ -223,7 +153,6 @@ def main():
     ws_server = websockets.serve(
         WSServer.handler, "0.0.0.0", 8765, ping_interval=None)
     asyncio.ensure_future(ws_server)
-    asyncio.ensure_future(camera_server())
     asyncio.ensure_future(main_server())
     loop.run_forever()
 

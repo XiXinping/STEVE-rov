@@ -1,0 +1,17 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.5/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/pi/.arduino15/packages/arduino/hardware/avr/1.8.5/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/pi/STEVE-rov/src/test_files/arduino_test_files/sanity_check/build/sketch/sanity_check.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]
