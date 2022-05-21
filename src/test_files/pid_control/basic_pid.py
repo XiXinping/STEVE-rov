@@ -56,38 +56,41 @@ class Plant:
 def main():
     set_point = 100
     kp = 0.5
-    ki = 10
+    ki = 3
     kd = 0.004
-    process_value = 0
+    process_value = 0  # thing that's being measured
+    process_values = []
+    num_runs = 25
 
     pid_controller = PID(set_point, kp, ki, kd)
     plant = Plant(0)
 
-    # for i in range(50):
-    # time.sleep(0.01)
-    # actuating_signal = pid_controller.compute(process_value)
-    # print(f"Process Value Before: {process_value}")
-    # process_value = plant.process(actuating_signal)
-    # print(f"Process Value After: {process_value}")
-    # print()
+    start_time = time.time()
 
-    plt.style.use('_mpl-gallery')
+    for i in range(num_runs):
+        time.sleep(0.01)
+        # thing that's being controller
+        actuating_signal = pid_controller.compute(process_value)
+        print(f"Process Value Before: {process_value}")
+        process_value = plant.process(actuating_signal)
+        process_values.append(process_value)
+        print(f"Process Value After: {process_value}")
+        print()
 
-    # make data
-    # np.random.seed(1)
-    # x = np.linspace(0, 8, 16)
-    # y1 = 3 + 4*x/8 + np.random.uniform(0.0, 0.5, len(x))
-    # y2 = 1 + 2*x/8 + np.random.uniform(0.0, 0.5, len(x))
+    total_time = time.time() - start_time
 
-    # # plot
     fig, ax = plt.subplots()
+    # set point line
+    ax.plot(np.linspace(0, int(total_time * 1000), num_runs), np.linspace(
+        set_point, set_point, num_runs), label="Set Point")
+    # error line
+    ax.plot(np.linspace(0, int(total_time * 1000), num_runs),
+            process_values, label="Error")
+    ax.legend()
 
-    # ax.plot(x, (y1 + y2)/2, linewidth=2)
-
-    # ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-    # ylim=(0, 8), yticks=np.arange(1, 8))
-    ax.plot([1, 2, 3, 4], [1, 4, 9, 16])
-
+    plt.title("Error Function Over Time")
+    plt.xlabel("Time (ms)")
+    plt.ylabel("Error")
     plt.show()
 
 
