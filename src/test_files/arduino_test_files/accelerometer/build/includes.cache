@@ -1,0 +1,82 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/variants/standard"
+  },
+  {
+    "Sourcefile": "/home/random/Projects/STEVE-rov/src/test_files/arduino_test_files/accelerometer/build/sketch/accelerometer.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/libraries/Wire/src"
+  },
+  {
+    "Sourcefile": "/home/random/Projects/STEVE-rov/src/test_files/arduino_test_files/accelerometer/build/sketch/accelerometer.ino.cpp",
+    "Include": "Adafruit_Sensor.h",
+    "Includepath": "/home/random/Arduino/libraries/Adafruit_Unified_Sensor"
+  },
+  {
+    "Sourcefile": "/home/random/Projects/STEVE-rov/src/test_files/arduino_test_files/accelerometer/build/sketch/accelerometer.ino.cpp",
+    "Include": "Adafruit_BNO055.h",
+    "Includepath": "/home/random/Arduino/libraries/Adafruit_BNO055"
+  },
+  {
+    "Sourcefile": "/home/random/Projects/STEVE-rov/src/test_files/arduino_test_files/accelerometer/build/sketch/accelerometer.ino.cpp",
+    "Include": "Adafruit_I2CDevice.h",
+    "Includepath": "/home/random/Arduino/libraries/Adafruit_BusIO"
+  },
+  {
+    "Sourcefile": "/home/random/Projects/STEVE-rov/src/test_files/arduino_test_files/accelerometer/build/sketch/accelerometer.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/libraries/Wire/src/Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/libraries/Wire/src/utility/twi.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/Arduino/libraries/Adafruit_Unified_Sensor/Adafruit_Sensor.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/Arduino/libraries/Adafruit_BNO055/Adafruit_BNO055.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp",
+    "Include": "SPI.h",
+    "Includepath": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/libraries/SPI/src"
+  },
+  {
+    "Sourcefile": "/home/random/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/random/.arduino15/packages/arduino/hardware/avr/1.8.3/libraries/SPI/src/SPI.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]
