@@ -77,6 +77,38 @@ class WSServer:
             await cls.web_client_camera_handler(websocket, path)
 
 
+class PID:
+    last_time = None
+    last_error = None
+    error_sum = 0
+
+    def __init__(self, set_point, proportional_gain, integral_gain,
+                 derivative_gain):
+        self.set_point = set_point
+        self.proportional_gain = proportional_gain
+        self.integral_gain = integral_gain
+        self.derivative_gain = derivative_gain
+
+        self.last_time = time.time()
+        self.last_error = set_point
+
+    def compute(self, process_value):
+        current_time = time.time()
+        d_time = time.time() - self.last_time
+        self.last_time = current_time
+
+        error = self.set_point - process_value
+        # compute the integral
+        self.error_sum += error * d_time
+        # compute the derivative
+        d_error = (error - self.last_error) / d_time
+        self.last_error = error
+
+        output = (self.proportional_gain * error + self.integral_gain
+                  * self.error_sum + self.derivative_gain * d_error)
+        return output
+
+
 def pump_arduino_data(ser):
     if ser.in_waiting > 0:
         arduino_data_recv = ser.read(ser.in_waiting).decode('ascii')
@@ -91,12 +123,14 @@ def pump_arduino_data(ser):
 
 
 async def main_server():
-    ser = serial.Serial('/dev/ttyACM0', 115200)
-    velocity_multiplier = 64  # value from -127 to 127
+    # ser = serial.Serial('/dev/ttyACM0', 115200)
+    velocity_multiplier = 64
+    vertical_anchor = False
+    vertical_pid = PID(0, 0.4, 3, 0.001)
     # store the last set of arduino commands to see if anything changes
     prev_arduino_commands = None
-    # store the previous joystick data to check for changes
     prev_velocity_toggle = None
+    prev_anchor_toggle = None
 
     await asyncio.sleep(1)
     print("Server started!")
@@ -109,7 +143,7 @@ async def main_server():
             # reverses this so up is 1 and down is -1
             y_velocity = round(-joystick_data['axes'][1] * velocity_multiplier)
             z_velocity = round(-joystick_data['axes'][3]
-                               * velocity_multiplier * 2)
+                               * velocity_multiplier)
             yaw_velocity = round(joystick_data['axes'][2]
                                  * velocity_multiplier)
             # light = bool(joystick_data['button_values'][0])
@@ -119,15 +153,19 @@ async def main_server():
             gripper_rotate = joystick_data['buttons'][5] - \
                 joystick_data['buttons'][4]
             velocity_toggle = joystick_data['dpad'][1]
+            anchor_toggle = joystick_data['buttons'][11]
 
             arduino_commands = {
                 "x": x_velocity, "y": y_velocity, "z": z_velocity,
                 "w": yaw_velocity, "g": gripper_grab, "r": gripper_rotate
             }
-            # only send the data if something has changed
+            if vertical_anchor:
+                # arduino_commands["y"] = vertical_pid.compute(
+                # arduino_data["z_accel"])
+                # only send the data if something has changed
             if arduino_commands != prev_arduino_commands:
                 arduino_commands_send = json.dumps(arduino_commands) + '\n'
-                ser.write(arduino_commands_send.encode('ascii'))
+                # ser.write(arduino_commands_send.encode('ascii'))
                 prev_arduino_commands = arduino_commands
 
             # increase or decrease speed when the dpad buttons are pressed
@@ -140,10 +178,17 @@ async def main_server():
                     velocity_multiplier //= 2
                 prev_velocity_toggle = velocity_toggle
 
-        # if arduino_data:
-        # print(arduino_data)
-        # if WSServer.web_client_main:
-        #         await WSServer.web_client_main.send(json.dumps(arduino_data))
+            if anchor_toggle == 1 and prev_anchor_toggle == 0:
+                if vertical_anchor:
+                    vertical_anchor = False
+                else:
+                    vertical_anchor = True
+            prev_anchor_toggle = anchor_toggle
+
+            # if arduino_data:
+            # print(arduino_data)
+            # if WSServer.web_client_main:
+            #         await WSServer.web_client_main.send(json.dumps(arduino_data))
 
         await asyncio.sleep(0.01)
 
