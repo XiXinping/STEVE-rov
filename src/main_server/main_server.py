@@ -77,6 +77,7 @@ class WSServer:
             await cls.web_client_camera_handler(websocket, path)
 
 
+# used to adjust the motor velocities to keep the ROV at a constant position
 class PID:
     last_time = None
     last_error = None
@@ -92,11 +93,13 @@ class PID:
         self.last_time = time.time()
         self.last_error = set_point
 
+    # takes in the acceleration as the process value
     def compute(self, process_value):
         current_time = time.time()
         d_time = time.time() - self.last_time
         self.last_time = current_time
 
+        # difference between the target and measured acceleration
         error = self.set_point - process_value
         # compute the integral
         self.error_sum += error * d_time
@@ -104,6 +107,7 @@ class PID:
         d_error = (error - self.last_error) / d_time
         self.last_error = error
 
+        # add the P, I, and the D together
         output = (self.proportional_gain * error + self.integral_gain
                   * self.error_sum + self.derivative_gain * d_error)
         return output
@@ -123,8 +127,9 @@ def pump_arduino_data(ser):
 
 
 async def main_server():
-    # ser = serial.Serial('/dev/ttyACM0', 115200)
+    ser = serial.Serial('/dev/ttyACM0', 115200)
     velocity_multiplier = 64
+    # adjust the y-velocity to have the ROV remain at a constant depth
     vertical_anchor = False
     vertical_pid = PID(0, 0.4, 3, 0.001)
     # store the last set of arduino commands to see if anything changes
@@ -132,11 +137,10 @@ async def main_server():
     prev_velocity_toggle = None
     prev_anchor_toggle = None
 
-    await asyncio.sleep(1)
     print("Server started!")
     while True:
         joystick_data = WSServer.pump_joystick_data()
-        # arduino_data = pump_arduino_data(ser)
+        arduino_data = pump_arduino_data(ser)
         if joystick_data:
             x_velocity = round(joystick_data['axes'][0] * velocity_multiplier)
             # the joystick interprets up as -1 and down as 1, the negative just
@@ -160,12 +164,13 @@ async def main_server():
                 "w": yaw_velocity, "g": gripper_grab, "r": gripper_rotate
             }
             if vertical_anchor:
-                # arduino_commands["y"] = vertical_pid.compute(
-                # arduino_data["z_accel"])
-                # only send the data if something has changed
+                arduino_commands["y"] = vertical_pid.compute(
+                    arduino_data["z_accel"])
+
+            # only send the data if something has change
             if arduino_commands != prev_arduino_commands:
                 arduino_commands_send = json.dumps(arduino_commands) + '\n'
-                # ser.write(arduino_commands_send.encode('ascii'))
+                ser.write(arduino_commands_send.encode('ascii'))
                 prev_arduino_commands = arduino_commands
 
             # increase or decrease speed when the dpad buttons are pressed
@@ -178,6 +183,7 @@ async def main_server():
                     velocity_multiplier //= 2
                 prev_velocity_toggle = velocity_toggle
 
+            # toggle the vertical anchor
             if anchor_toggle == 1 and prev_anchor_toggle == 0:
                 if vertical_anchor:
                     vertical_anchor = False
@@ -188,7 +194,19 @@ async def main_server():
             # if arduino_data:
             # print(arduino_data)
             # if WSServer.web_client_main:
-            #         await WSServer.web_client_main.send(json.dumps(arduino_data))
+            #     await WSServer.web_client_main.send(json.dumps(arduino_data))
+
+        # if the joystick client drops out, the ROV will continue to remain
+        # at a constant depth
+        if not joystick_data:
+            if vertical_anchor:
+                # adjusted y-velocity
+                y_velocity = vertical_pid.compute(arduino_data["z_accel"])
+                arduino_commands = {
+                    "x": 0, "y": y_velocity, "z": 0, "w": 0, "g": 0, "r": 0
+                }
+                arduino_commands_send = json.dumps(arduino_commands) + '\n'
+                ser.write(arduino_commands_send.encode('ascii'))
 
         await asyncio.sleep(0.01)
 
