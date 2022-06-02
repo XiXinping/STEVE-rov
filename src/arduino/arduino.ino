@@ -1,10 +1,14 @@
-#include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
-#include <ArduinoJson.h>
+#include <Adafruit_BNO055.h>
 #include <Adafruit_LiquidCrystal.h>
-// called this way, it uses the default address 0x40
+#include <Adafruit_PWMServoDriver.h>
+#include <Adafruit_Sensor.h>
+#include <ArduinoJson.h>
+#include <utility/inumaths.h>
+#include <Wire.h>
+
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Adafruit_LiquidCrystal lcd(0);
+Adafruit_BNO055 bno = Adafruit_BNO055(55);
 
 #define SERVOMIN 150 // This is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX 600 // This is the 'maximum' pulse length count (out of 4096)
@@ -228,7 +232,8 @@ void print_velocities(int x_velocity, int y_velocity, int z_velocity,
     lcd.print("    ");
 }
 
-String receive_joystick_data = "";
+String receive_data = "";
+char send_json_string[128];
 
 
 void setup() {
@@ -243,8 +248,9 @@ void setup() {
 
     Serial.begin(115200);
 
-    pwm.begin();
     lcd.begin(16, 2);
+    pwm.begin();
+    bno.begin();
 
     pwm.setOscillatorFrequency(27000000);
     pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
@@ -290,12 +296,12 @@ void setup() {
 
 void loop() {
     if(Serial.available() > 0) {
-        receive_joystick_data = Serial.readStringUntil('\n');
+        receive_data = Serial.readStringUntil('\n');
 
         // creates a json document on the stack                                     
-        StaticJsonDocument<256> doc;                                            
+        StaticJsonDocument<256> receive_doc;                                            
  
-        DeserializationError err = deserializeJson(doc, receive_joystick_data);                
+        DeserializationError err = deserializeJson(doc, receive_data);                
         if(err) {                                                                   
             Serial.print("Error: ");                                                
             Serial.println(err.c_str());
@@ -306,15 +312,28 @@ void loop() {
             return;                                                                 
         }                                                                           
         // parses data from the json document and stores them as variables          
-        x_velocity = doc["x"];
-        y_velocity = doc["y"];
-        z_velocity = doc["z"];
-        yaw_velocity = doc["w"];
-        grab = doc["g"];
-        rotate_direction = doc["r"];
+        x_velocity = receive_doc["x"];
+        y_velocity = receive_doc["y"];
+        z_velocity = receive_doc["z"];
+        yaw_velocity = receive_doc["w"];
+        grab = receive_doc["g"];
+        rotate_direction = receive_doc["r"];
 
-        receive_joystick_data = "";
+        receive_data = "";
     }
+    StaticJsonDocument<128> send_doc;
+
+    sensors_event_t event;
+    bno.getEvent(&event);
+
+    imu::Vector<3> accel_vector = bno.getVector(Adafruit:BNO055::VECTOR_NIEARACCEL);
+
+    send_doc["x_accel"] = accel_vector.x();
+    send_doc["y_accel"] = accel_vector.y();
+    send_doc["z_accel"] = accel_vector.z();
+
+    serializeJson(send_doc, send_json_string);
+    Serial.println(send_json_string);
 
 
 
