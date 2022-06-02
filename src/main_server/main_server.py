@@ -199,14 +199,15 @@ async def main_server():
         # if the joystick client drops out, the ROV will continue to remain
         # at a constant depth
         if not joystick_data:
-            if vertical_anchor:
-                # adjusted y-velocity
-                y_velocity = vertical_pid.compute(arduino_data["z_accel"])
-                arduino_commands = {
-                    "x": 0, "y": y_velocity, "z": 0, "w": 0, "g": 0, "r": 0
-                }
-                arduino_commands_send = json.dumps(arduino_commands) + '\n'
-                ser.write(arduino_commands_send.encode('ascii'))
+            pass
+            # if vertical_anchor:
+                # # adjusted y-velocity
+                # y_velocity = vertical_pid.compute(arduino_data["z_accel"])
+                # arduino_commands = {
+                    # "x": 0, "y": y_velocity, "z": 0, "w": 0, "g": 0, "r": 0
+                # }
+                # arduino_commands_send = json.dumps(arduino_commands) + '\n'
+                # ser.write(arduino_commands_send.encode('ascii'))
 
         await asyncio.sleep(0.01)
 

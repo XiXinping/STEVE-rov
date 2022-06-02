@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import argparse
 import shutil
 import subprocess
 from termcolor import colored
@@ -9,7 +10,7 @@ def upload_arduino_code():
     arduino_process = subprocess.Popen([
         "arduino-cli", "compile", "-b", "arduino:avr:uno", "--port",
         "/dev/ttyACM0", "--build-path", "src/arduino/build", "--upload",
-        "src/arduino/arduino.ino"])
+        "--verbose", "src/arduino/arduino.ino"])
     arduino_process.wait()
     shutil.rmtree("src/arduino/build")
 
@@ -22,8 +23,8 @@ def start_main_server():
 
 def start_cameras():
     rpi_camera = subprocess.Popen([
-        "raspivid", "-ISO", "0", "-t", "0", "-n", "-o", "-", "-w", "640", "-h",
-        "480", "-fps", "90", "-b", "25000000", "-cd", "MJPEG"
+        "raspivid", "-ISO", "0", "-t", "0", "-n", "-o", "-", "-w", "960", "-h",
+        "540", "-fps", "60", "-b", "25000000", "-cd", "MJPEG"
     ], stdout=subprocess.PIPE)
 
     usb_camera = subprocess.Popen([
@@ -40,12 +41,20 @@ def start_cameras():
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--no-arduino-compile",
+                        help="Don't compile and upload the arduino code",
+                        action="store_true")
+    args = parser.parse_args()
+
     print(colored("STEVE ROV\n", "blue"))
-    print("Compiling and uploading arduino code!")
-    upload_arduino_code()
+    if not args.no_arduino_compile:
+        print("Compiling and uploading arduino code!")
+        upload_arduino_code()
 
     print("Starting main server:")
     main_server = start_main_server()
+    time.sleep(0.5)
 
     print("Running camera code:")
     rpi_camera, usb_camera, mjpeg_server1, mjpeg_server2 = start_cameras()

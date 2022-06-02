@@ -31,7 +31,7 @@ int8_t rotate_direction = 0;   //spin right
 
 // speed limits for each individual motor
 uint8_t speed_limits[] = {64, 64, 64, 64, 64, 64};
-uint8_t *prev_motor_velocities;
+uint8_t speed_mins[] = {0, 0, 0, 0, 0, 0};
 
 void rotate_gripper(int8_t rotate_direction) {
     switch(rotate_direction) {
@@ -95,7 +95,7 @@ void fire_motor(int motor_num, int velocity) {
 }
 
 // move the robot left or right
-void move_x(int8_t velocity, int8_t* motor_velocities) {
+void move_x(int8_t velocity, int16_t* motor_velocities) {
     // if the velocity is positive, the robot will move right, if the
     // velocity is negative, the robot will move left
     motor_velocities[0] += -velocity; // top left motor should fire backwards
@@ -105,7 +105,7 @@ void move_x(int8_t velocity, int8_t* motor_velocities) {
 }
 
 // move the robot forward or backward
-void move_y(int8_t velocity, int8_t *motor_velocities) {
+void move_y(int8_t velocity, int16_t *motor_velocities) {
     // positive velocity makes the robot move forward, negative velocity makes
     // the robot move backward
     motor_velocities[0] += -velocity;
@@ -115,7 +115,7 @@ void move_y(int8_t velocity, int8_t *motor_velocities) {
 }
 
 // move the robot up or down
-void move_z(int8_t velocity, int8_t* motor_velocities) {
+void move_z(int8_t velocity, int16_t* motor_velocities) {
     // positive velocity makes the robot move up, negative velocity makes the
     // robot move down
     motor_velocities[4] += velocity;
@@ -123,7 +123,7 @@ void move_z(int8_t velocity, int8_t* motor_velocities) {
 }
 
 // turn the robot left or right
-void yaw(int8_t velocity, int8_t* motor_velocities) {
+void yaw(int8_t velocity, int16_t* motor_velocities) {
     // positive velocity makes the robot turn right, negative velocity makes
     // the robot turn left
     motor_velocities[0] += -velocity;
@@ -133,40 +133,66 @@ void yaw(int8_t velocity, int8_t* motor_velocities) {
 }
 
 void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity,
-        int8_t yaw_velocity, int8_t speed_limits) {
-    int8_t motor_velocities[] = {0, 0, 0, 0, 0, 0};
+        int8_t yaw_velocity, uint8_t speed_limits[]) {
+    int16_t motor_velocities[] = {0, 0, 0, 0, 0, 0};
     move_x(x_velocity, motor_velocities);
     move_y(y_velocity, motor_velocities);
     move_z(z_velocity, motor_velocities);
     yaw(yaw_velocity, motor_velocities);
 
-    // prevent the motors from revving too quickly and drawing too much current
-    for (uint8_t i; i < 6; i++) {
-        if (motor_velocities[i] > speed_limits[i]) {
-            // make sure the velocities don't exceed the speed limit
-            motor_velocities[i] = speed_limits[i];
+    for (uint8_t i = 0; i < 6; i++) {
+        // prevent the motors from revving too quickly and drawing too much current
+        if (abs(motor_velocities[i]) > speed_limits[i]) {
+            // make sure the motor speeds don't exceed the speed limit
+            if (motor_velocities[i] > speed_limits[i]) {
+                motor_velocities[i] = speed_limits[i];
+            } else if (motor_velocities[i] < -speed_limits[i]) {
+                motor_velocities[i] = -speed_limits[i];
+            }
             // gradually increase the speed limit
-            if (speed_limits[i] < 128) {
-                speed_limits[i] += 8;
+            if (speed_limits[i] < 127) {
+                speed_limits[i]++;
             }
         }
+        /*if (abs(motor_velocities[i]) < speed_mins[i]) {*/
+            /*// make sure the motor speeds don't fall below the speed minimums*/
+            /*if (motor_velocities[i] < speed_mins[i]) {*/
+                /*motor_velocities[i] = speed_mins[i];*/
+            /*} else if (motor_velocities > -speed_mins[i]) {*/
+                /*motor_velocities[i] = -speed_mins[i];*/
+            /*}*/
+
+            /*// gradually decrease the speed min*/
+            /*if (speed_mins[i] > 0) {*/
+                /*speed_mins[i]--;*/
+            /*}*/
+
+        /*}*/
         // if the motor speed falls below half speed, reset the speed limit
         // to prevent it from being able to accelerate freely
-        if (motor_velocities[i] < 64) {
-            speed_limits[i] = 64;
+        if (abs(motor_velocities[i]) < 32) {
+            speed_limits[i] = 32;
+        }
+        if (abs(motor_velocities[i]) > 64) {
+            speed_mins[i] = 64;
         }
 
     }
 
     // make sure the motor speeds don't exceed the limit of the PWM
-    for (uint8_t i; i < 6; i++) {
-        if (motor_velocities[i] > 128) {
-            motor_velocities[i] = 128;
-        } else if (motor_velocities[i] < -128) {
-            motor_velocities[i] = -128;
+    for (uint8_t i = 0; i < 6; i++) {
+        if (motor_velocities[i] > 127) {
+            motor_velocities[i] = 127;
+        } else if (motor_velocities[i] < -127) {
+            motor_velocities[i] = -127;
+        }
+
+        // below an eigth of the max speed, the motors don't really respond
+        if (abs(motor_velocities[i]) < 16) {
+            motor_velocities[i] = 0;
         }
     }
-    for (uint8_t i; i < 6; i++) {
+    for (uint8_t i = 0; i < 6; i++) {
         fire_motor(i, motor_velocities[i]);
     }
 }
@@ -252,7 +278,7 @@ void setup() {
         lcd.print("Testing Motor ");
         lcd.print(i);
         fire_motor(i, 20);
-        delay(1000);
+        delay(500);
         lcd.clear();
         fire_motor(i, 0);
     }
