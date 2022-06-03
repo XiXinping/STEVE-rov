@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "/home/random/Projects/STEVE-rov/src/arduino/arduino.ino"
 #include <Adafruit_BNO055.h>
 #include <Adafruit_LiquidCrystal.h>
 #include <Adafruit_PWMServoDriver.h>
@@ -233,7 +235,7 @@ void print_velocities(int x_velocity, int y_velocity, int z_velocity,
 }
 
 String receive_data = "";
-char send_data_string[128];
+char send_json_string[128];
 
 
 void setup() {
@@ -333,8 +335,8 @@ void loop() {
     send_doc["y_accel"] = accel_vector.y();
     send_doc["z_accel"] = accel_vector.z();
 
-    serializeJson(send_doc, send_data_string);
-    Serial.println(send_data_string);
+    serializeJson(send_doc, send_json_string);
+    Serial.println(send_json_string);
 
 
 
@@ -344,3 +346,4 @@ void loop() {
     /*print_velocities(x_velocity, y_velocity, z_velocity, yaw_velocity);*/
     delay(10);
 }
+
