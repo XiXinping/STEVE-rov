@@ -3,7 +3,7 @@
 #include <Adafruit_PWMServoDriver.h>
 #include <Adafruit_Sensor.h>
 #include <ArduinoJson.h>
-#include <utility/inumaths.h>
+#include <utility/imumaths.h>
 #include <Wire.h>
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
@@ -248,9 +248,11 @@ void setup() {
 
     Serial.begin(115200);
 
+    bno.begin();
     lcd.begin(16, 2);
     pwm.begin();
-    bno.begin();
+
+    bno.setExtCrystalUse(true);
 
     pwm.setOscillatorFrequency(27000000);
     pwm.setPWMFreq(SERVO_FREQ);  // Analog servos run at ~50 Hz updates
@@ -301,7 +303,7 @@ void loop() {
         // creates a json document on the stack                                     
         StaticJsonDocument<256> receive_doc;                                            
  
-        DeserializationError err = deserializeJson(doc, receive_data);                
+        DeserializationError err = deserializeJson(receive_doc, receive_data);                
         if(err) {                                                                   
             Serial.print("Error: ");                                                
             Serial.println(err.c_str());
@@ -326,7 +328,8 @@ void loop() {
     sensors_event_t event;
     bno.getEvent(&event);
 
-    imu::Vector<3> accel_vector = bno.getVector(Adafruit:BNO055::VECTOR_NIEARACCEL);
+    imu::Vector<3> accel_vector = 
+        bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
 
     send_doc["x_accel"] = accel_vector.x();
     send_doc["y_accel"] = accel_vector.y();

@@ -191,10 +191,10 @@ async def main_server():
                     vertical_anchor = True
             prev_anchor_toggle = anchor_toggle
 
-            # if arduino_data:
-            # print(arduino_data)
-            # if WSServer.web_client_main:
-            #     await WSServer.web_client_main.send(json.dumps(arduino_data))
+        if arduino_data:
+            print(arduino_data)
+            if WSServer.web_client_main:
+                await WSServer.web_client_main.send(json.dumps(arduino_data))
 
         # if the joystick client drops out, the ROV will continue to remain
         # at a constant depth
