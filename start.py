@@ -35,9 +35,9 @@ def start_cameras():
     mjpeg_server1 = subprocess.Popen(["raspivid_mjpeg_server", "--port",
                                       "9876"], stdin=rpi_camera.stdout)
 
-    # mjpeg_server2 = subprocess.Popen(["raspivid_mjpeg_server", "--port",
-                                      # "9877"], stdin=usb_camera.stdout)
-    return (rpi_camera, usb_camera, mjpeg_server1)
+    mjpeg_server2 = subprocess.Popen(["raspivid_mjpeg_server", "--port",
+                                      "9877"], stdin=usb_camera.stdout)
+    return (rpi_camera, usb_camera, mjpeg_server1, mjpeg_server2)
 
 
 def main():
@@ -57,7 +57,7 @@ def main():
     time.sleep(0.5)
 
     print("Running camera code:")
-    rpi_camera, usb_camera, mjpeg_server1 = start_cameras()
+    rpi_camera, usb_camera, mjpeg_server1, mjpeg_server2 = start_cameras()
 
     while True:
         try:
@@ -67,7 +67,7 @@ def main():
             rpi_camera.terminate()
             usb_camera.terminate()
             mjpeg_server1.terminate()
-            # mjpeg_server2.terminate()
+            mjpeg_server2.terminate()
             return
 
 
