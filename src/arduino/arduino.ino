@@ -233,7 +233,7 @@ void print_velocities(int x_velocity, int y_velocity, int z_velocity,
 }
 
 String receive_data = "";
-char send_json_string[128];
+char send_data_string[128];
 
 
 void setup() {
@@ -243,7 +243,7 @@ void setup() {
     pinMode(spin_motor_neg, OUTPUT);
     pinMode(grab_current_control, OUTPUT);
     pinMode(spin_current_control, OUTPUT);
-    analogWrite(grab_current_control, 180);  // 255 = 5V
+    analogWrite(grab_current_control, 180); // 255 = 5V
     analogWrite(spin_current_control, 255); // 255 = 5V
 
     Serial.begin(115200);
@@ -335,8 +335,8 @@ void loop() {
     send_doc["y_accel"] = accel_vector.y();
     send_doc["z_accel"] = accel_vector.z();
 
-    serializeJson(send_doc, send_json_string);
-    Serial.println(send_json_string);
+    serializeJson(send_doc, send_data_string);
+    Serial.println(send_data_string);
 
 
 

@@ -116,12 +116,10 @@ class PID:
 def pump_arduino_data(ser):
     if ser.in_waiting > 0:
         arduino_data_recv = ser.read(ser.in_waiting).decode('ascii')
-        # try:
-        # arduino_data = json.loads(arduino_data_recv)
-        # except json.JSONDecodeError:
-        # return None
-        # return arduino_data
-        return arduino_data_recv
+        try:
+            return json.loads(arduino_data_recv)
+        except json.JSONDecodeError:
+            return None
     else:
         return None
 
@@ -141,73 +139,64 @@ async def main_server():
     while True:
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = pump_arduino_data(ser)
-        if joystick_data:
-            x_velocity = round(joystick_data['axes'][0] * velocity_multiplier)
-            # the joystick interprets up as -1 and down as 1, the negative just
-            # reverses this so up is 1 and down is -1
-            y_velocity = round(-joystick_data['axes'][1] * velocity_multiplier)
-            z_velocity = round(-joystick_data['axes'][3]
-                               * velocity_multiplier)
-            yaw_velocity = round(joystick_data['axes'][2]
-                                 * velocity_multiplier)
-            # light = bool(joystick_data['button_values'][0])
-            gripper_grab = joystick_data['buttons'][7] - \
-                joystick_data['buttons'][6]
-            # rotate left if negative, rotate right if positive
-            gripper_rotate = joystick_data['buttons'][5] - \
-                joystick_data['buttons'][4]
-            velocity_toggle = joystick_data['dpad'][1]
-            anchor_toggle = joystick_data['buttons'][11]
 
-            arduino_commands = {
-                "x": x_velocity, "y": y_velocity, "z": z_velocity,
-                "w": yaw_velocity, "g": gripper_grab, "r": gripper_rotate
-            }
+        # if a joystick client hasn't connected yet
+        if not joystick_data:
+            continue
+
+        x_velocity = round(joystick_data['axes'][0] * velocity_multiplier)
+        # the joystick interprets up as -1 and down as 1, the negative just
+        # reverses this so up is 1 and down is -1
+        y_velocity = round(-joystick_data['axes'][1] * velocity_multiplier)
+        z_velocity = round(-joystick_data['axes'][3]
+                           * velocity_multiplier)
+        yaw_velocity = round(joystick_data['axes'][2]
+                             * velocity_multiplier)
+        # light = bool(joystick_data['button_values'][0])
+        gripper_grab = joystick_data['buttons'][7] - \
+            joystick_data['buttons'][6]
+        # rotate left if negative, rotate right if positive
+        gripper_rotate = joystick_data['buttons'][5] - \
+            joystick_data['buttons'][4]
+        velocity_toggle = joystick_data['dpad'][1]
+        anchor_toggle = joystick_data['buttons'][11]
+
+        arduino_commands = {
+            "x": x_velocity, "y": y_velocity, "z": z_velocity,
+            "w": yaw_velocity, "g": gripper_grab, "r": gripper_rotate
+        }
+        if vertical_anchor:
+            arduino_commands["y"] = vertical_pid.compute(
+                arduino_data["z_accel"])
+
+        # only send the data if something has change
+        if arduino_commands != prev_arduino_commands:
+            arduino_commands_send = json.dumps(arduino_commands) + '\n'
+            ser.write(arduino_commands_send.encode('ascii'))
+            prev_arduino_commands = arduino_commands
+
+        # increase or decrease speed when the dpad buttons are pressed
+        if velocity_toggle != prev_velocity_toggle:
+            # make sure velocity doesn't exceed 128
+            if velocity_toggle > 0 and velocity_multiplier <= 64:
+                velocity_multiplier *= 2
+            # make sure velocity doesn't fall below 16
+            if velocity_toggle < 0 and velocity_multiplier >= 32:
+                velocity_multiplier //= 2
+            prev_velocity_toggle = velocity_toggle
+
+        # toggle the vertical anchor
+        if anchor_toggle == 1 and prev_anchor_toggle == 0:
             if vertical_anchor:
-                arduino_commands["y"] = vertical_pid.compute(
-                    arduino_data["z_accel"])
-
-            # only send the data if something has change
-            if arduino_commands != prev_arduino_commands:
-                arduino_commands_send = json.dumps(arduino_commands) + '\n'
-                ser.write(arduino_commands_send.encode('ascii'))
-                prev_arduino_commands = arduino_commands
-
-            # increase or decrease speed when the dpad buttons are pressed
-            if velocity_toggle != prev_velocity_toggle:
-                # make sure velocity doesn't exceed 128
-                if velocity_toggle > 0 and velocity_multiplier <= 64:
-                    velocity_multiplier *= 2
-                # make sure velocity doesn't fall below 16
-                if velocity_toggle < 0 and velocity_multiplier >= 32:
-                    velocity_multiplier //= 2
-                prev_velocity_toggle = velocity_toggle
-
-            # toggle the vertical anchor
-            if anchor_toggle == 1 and prev_anchor_toggle == 0:
-                if vertical_anchor:
-                    vertical_anchor = False
-                else:
-                    vertical_anchor = True
-            prev_anchor_toggle = anchor_toggle
+                vertical_anchor = False
+            else:
+                vertical_anchor = True
+        prev_anchor_toggle = anchor_toggle
 
         if arduino_data:
             print(arduino_data)
             if WSServer.web_client_main:
                 await WSServer.web_client_main.send(json.dumps(arduino_data))
-
-        # if the joystick client drops out, the ROV will continue to remain
-        # at a constant depth
-        if not joystick_data:
-            pass
-            # if vertical_anchor:
-                # # adjusted y-velocity
-                # y_velocity = vertical_pid.compute(arduino_data["z_accel"])
-                # arduino_commands = {
-                    # "x": 0, "y": y_velocity, "z": 0, "w": 0, "g": 0, "r": 0
-                # }
-                # arduino_commands_send = json.dumps(arduino_commands) + '\n'
-                # ser.write(arduino_commands_send.encode('ascii'))
 
         await asyncio.sleep(0.01)
 
