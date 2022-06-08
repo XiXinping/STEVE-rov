@@ -2,26 +2,72 @@
 <html>
     <meta charset="UTF-8">
     <head>
-        <title>Underwater ROV Web Client</title>
+        <title>STEVE ROV Web Client</title>
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0"/>
         <style media="screen">
-            body {font-family: Helvetica, sans-serif;
+            @font-face { 
+                font-family: "FiraSans";  
+                src: url("fonts/FiraSans-Regular.otf") format("opentype"); 
+                font-style: normal;
+            }
+            @font-face {
+                font-family: "FiraSansMedium";
+                src: url("fonts/FiraSans-Medium.otf") format("opentype");
+            }
+            body {font-family: "FiraSans", sans-serif;
                   font-size: 1.2em}
+            h1 {font-family: "FiraSansMedium", sans-serif}
+
+            .camera {
+                margin-left: 0.5em;
+                margin-right: 0.5em;
+                width: 48vw;
+                height: 27vw;
+            }
+
+            #camera-feeds {
+                display: flex;
+                justify-content: space-around;
+                align-items: space-around;
+            }
+            
+            .live-image-div {
+                display: block;
+                text-align: center;
+            }
+
+            .text {
+                margin-bottom: 1em;
+            }
         </style>
     </head>
     <body>
-        <h1>Underwater ROV</h1>
-        <h3>Camera Feed</h3>
-        <img id=live-image1 style="transform: rotate(180deg)" alt="Camera feed
-        unavailable" src="http://192.168.100.1:9876">
-        <img id=live-image2 style="transform: rotate(0deg)" alt="Camera feed
-        unavailable" src="http://192.168.100.1:9877">
-        <p id="temperature-tag">Temperature: </p>
-        <p id="x-accel-tag">X Acceleration: </p>
-        <p id="y-accel-tag">Y Acceleration: </p>
-        <p id="z-accel-tag">Z Acceleration: </p>
+        <h1 style="text-align: center">STEVE ROV</h1>
+        <h2>Camera Feed</h2>
+        <div id="camera-feeds">
+            <div class="live-image-div">
+            <img id=live-image1 class="camera" style="transform: rotate(0deg)"
+                alt="Camera feed unavailable" src="http://192.168.100.1:9876" 
+                onerror=this.src="images/static.gif">
+            <p>Camera 1</p>
+            </div>
+
+            <div class="live-image-div">
+            <img id=live-image2 class="camera" style="transform: rotate(0deg)" 
+                alt="Camera feed unavailable" src="http://192.168.100.1:9877"
+                onerror=this.src="images/static.gif">
+            <p>Camera 2</p>
+            </div>
+        </div>
+        <div id="Sensor-Data">
+            <h2>Sensor Data</h2>
+            <p id="temperature-tag" class="text">Temperature: </p>
+            <p id="x-accel-tag" class="text">X Acceleration: </p>
+            <p id="y-accel-tag" class="text">Y Acceleration: </p>
+            <p id="z-accel-tag" class="text">Z Acceleration: </p>
+        </div>
     <script src="web_client.js">
     </body>
 </html>
