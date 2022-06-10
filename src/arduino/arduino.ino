@@ -336,7 +336,7 @@ void loop() {
     send_doc["za"] = accel_vector.z();
 
     serializeJson(send_doc, send_data_string);
-    Serial.println(send_data_string);
+    /*Serial.println(send_data_string);*/
 
 
 
