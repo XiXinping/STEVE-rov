@@ -331,8 +331,8 @@ void loop() {
     imu::Vector<3> accel_vector = 
         bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
 
-    send_doc["xa"] = accel_vector.x();
-    send_doc["ya"] = accel_vector.y();
+    /*send_doc["xa"] = accel_vector.x();*/
+    /*send_doc["ya"] = accel_vector.y();*/
     send_doc["za"] = accel_vector.z();
 
     serializeJson(send_doc, send_data_string);

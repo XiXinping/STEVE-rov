@@ -115,7 +115,9 @@ class PID:
 
 def pump_arduino_data(ser):
     if ser.in_waiting > 0:
-        arduino_data_recv = ser.read(ser.in_waiting).decode('ascii')
+        # arduino_data_recv = ser.read_until(expected="\n").decode('ascii')
+        # print(arduino_data_recv)
+        arduino_data_recv = None
         try:
             return json.loads(arduino_data_recv)
         except json.JSONDecodeError:
