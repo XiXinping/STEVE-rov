@@ -12,7 +12,6 @@ def upload_arduino_code():
         "/dev/ttyACM0", "--build-path", "src/arduino/build", "--upload",
         "--verbose", "src/arduino/arduino.ino"])
     arduino_process.wait()
-    shutil.rmtree("src/arduino/build")
 
 
 def start_main_server():

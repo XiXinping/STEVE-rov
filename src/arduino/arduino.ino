@@ -233,7 +233,7 @@ void print_velocities(int x_velocity, int y_velocity, int z_velocity,
 }
 
 String receive_data = "";
-char send_data_string[128];
+String send_data_string = "\r";
 
 
 void setup() {
@@ -334,9 +334,14 @@ void loop() {
     /*send_doc["xa"] = accel_vector.x();*/
     /*send_doc["ya"] = accel_vector.y();*/
     send_doc["za"] = accel_vector.z();
+    lcd.setCursor(1, 0);
+    lcd.print("Z Accel: ");
+    lcd.print(accel_vector.z());
+    lcd.print("    ");
 
     serializeJson(send_doc, send_data_string);
-    /*Serial.println(send_data_string);*/
+    Serial.print("\r");  // starting signal
+    Serial.println(send_data_string);
 
 
 

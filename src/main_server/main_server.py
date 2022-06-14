@@ -115,23 +115,36 @@ class PID:
 
 class ArduinoSerial:
     arduino_data = None
-    part_arduino_data = None
+    partial_data = None
 
-    def __init__(self):
-        self.ser = serial.Serial('/dev/ttyACM0', 115200)
-
+    @classmethod
     def pump(self):
         return self.arduino_data
 
     async def listener(self):
-        if self.ser.in_waiting > 0:
-            arduino_data_recv = self.ser.read_until(
-                expected="\n").decode('ascii')
-            # print(arduino_data_recv)
+        ser = serial.Serial("/dev/ttyACM0", 115200)
+        while True:
+            # wait until the starting signal is received
+            while True:
+                if ser.in_waiting > 0:
+                    # the starting signal is a carriage return
+                    starting_byte = ser.read_until(
+                        expected='\r', timeout=0).decode('ascii')
+                    if starting_byte == '\r':
+                        break
+                    await asyncio.sleep(0.01)
+            # read the rest of the data
+            while True:
+                if ser.in_waiting > 0:
+                    data_fragment = ser.read_until(
+                        expected='\n', timeout=0).decode('ascii')
+                    if data_fragment == '\n':
+                        break
+                    partial_data = partial_data + data_fragment
             try:
-                return json.loads(arduino_data_recv)
+                arduino_data = json.loads(arduino_data_recv)
             except json.JSONDecodeError:
-                pass
+                ser.reset_input_buffer()
 
 
 async def main_server():
@@ -216,6 +229,7 @@ def main():
     ws_server = websockets.serve(
         WSServer.handler, "0.0.0.0", 8765, ping_interval=None)
     asyncio.ensure_future(ws_server)
+    asyncio.ensure_future(ArduinoSerial.listener())
     asyncio.ensure_future(main_server())
     loop.run_forever()
 
@@ -225,3 +239,4 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print('')
+
