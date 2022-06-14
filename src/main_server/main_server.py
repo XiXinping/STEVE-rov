@@ -125,31 +125,37 @@ class ArduinoSerial:
     async def listener(cls):
         ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout=0)
         while True:
+            print("ooga booga")
             # wait until the starting signal is received
             while True:
+                print("unga bunga")
                 if ser.in_waiting > 0:
                     # the starting signal is a carriage return
+                    print("asdfasdf")
                     starting_byte = ser.read_until(
                         expected='\r').decode('ascii')
+                    print(f"AAGH: {starting_byte}")
                     if starting_byte == '\r':
                         break
-                    await asyncio.sleep(0.01)
+                await asyncio.sleep(0.01)
             # read the rest of the data
             while True:
+                print("akdhdsaasdfasdf")
                 if ser.in_waiting > 0:
                     data_fragment = ser.read_until(
                         expected='\n').decode('ascii')
                     if data_fragment == '\n':
                         break
                     partial_data = partial_data + data_fragment
+                await asyncio.sleep(0.01)
             try:
                 arduino_data = json.loads(arduino_data_recv)
             except json.JSONDecodeError:
                 ser.reset_input_buffer()
+            await asyncio.sleep(0.01)
 
 
 async def main_server():
-    ser = serial.Serial('/dev/ttyACM0', 115200)
     velocity_multiplier = 64
     # adjust the y-velocity to have the ROV remain at a constant depth
     vertical_anchor = False
