@@ -113,17 +113,25 @@ class PID:
         return output
 
 
-def pump_arduino_data(ser):
-    if ser.in_waiting > 0:
-        # arduino_data_recv = ser.read_until(expected="\n").decode('ascii')
-        # print(arduino_data_recv)
-        arduino_data_recv = None
-        try:
-            return json.loads(arduino_data_recv)
-        except json.JSONDecodeError:
-            return None
-    else:
-        return None
+class ArduinoSerial:
+    arduino_data = None
+    part_arduino_data = None
+
+    def __init__(self):
+        self.ser = serial.Serial('/dev/ttyACM0', 115200)
+
+    def pump(self):
+        return self.arduino_data
+
+    async def listener(self):
+        if self.ser.in_waiting > 0:
+            arduino_data_recv = self.ser.read_until(
+                expected="\n").decode('ascii')
+            # print(arduino_data_recv)
+            try:
+                return json.loads(arduino_data_recv)
+            except json.JSONDecodeError:
+                pass
 
 
 async def main_server():
