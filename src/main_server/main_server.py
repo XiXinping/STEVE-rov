@@ -118,18 +118,19 @@ class ArduinoSerial:
     partial_data = None
 
     @classmethod
-    def pump(self):
-        return self.arduino_data
+    def pump(cls):
+        return cls.arduino_data
 
-    async def listener(self):
-        ser = serial.Serial("/dev/ttyACM0", 115200)
+    @classmethod
+    async def listener(cls):
+        ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout=0)
         while True:
             # wait until the starting signal is received
             while True:
                 if ser.in_waiting > 0:
                     # the starting signal is a carriage return
                     starting_byte = ser.read_until(
-                        expected='\r', timeout=0).decode('ascii')
+                        expected='\r').decode('ascii')
                     if starting_byte == '\r':
                         break
                     await asyncio.sleep(0.01)
@@ -137,7 +138,7 @@ class ArduinoSerial:
             while True:
                 if ser.in_waiting > 0:
                     data_fragment = ser.read_until(
-                        expected='\n', timeout=0).decode('ascii')
+                        expected='\n').decode('ascii')
                     if data_fragment == '\n':
                         break
                     partial_data = partial_data + data_fragment
@@ -161,7 +162,7 @@ async def main_server():
     print("Server started!")
     while True:
         joystick_data = WSServer.pump_joystick_data()
-        arduino_data = pump_arduino_data(ser)
+        arduino_data = ArduinoSerial.pump()
 
         # if a joystick client hasn't connected yet
         if not joystick_data:
