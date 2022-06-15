@@ -115,7 +115,7 @@ class PID:
 
 class ArduinoSerial:
     arduino_data = None
-    partial_data = None
+    partial_data = ""
 
     @classmethod
     def pump(cls):
@@ -123,36 +123,42 @@ class ArduinoSerial:
 
     @classmethod
     async def listener(cls):
-        ser = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout=0)
+        ser = serial.Serial("/dev/ttyACM0", timeout=0, baudrate=115200)
         while True:
-            print("ooga booga")
             # wait until the starting signal is received
             while True:
-                print("unga bunga")
                 if ser.in_waiting > 0:
-                    # the starting signal is a carriage return
-                    print("asdfasdf")
-                    starting_byte = ser.read_until(
-                        expected='\r').decode('ascii')
-                    print(f"AAGH: {starting_byte}")
-                    if starting_byte == '\r':
+                    try:
+                        # the starting signal is a carriage return
+                        starting_byte = ser.read_until(
+                            expected='$').decode('ascii')
+                    except UnicodeDecodeError:
+                        await asyncio.sleep(0.0001)
+                        continue
+                    if starting_byte[-1] == '$':
                         break
-                await asyncio.sleep(0.01)
+                await asyncio.sleep(0.0001)
             # read the rest of the data
             while True:
-                print("akdhdsaasdfasdf")
                 if ser.in_waiting > 0:
-                    data_fragment = ser.read_until(
-                        expected='\n').decode('ascii')
-                    if data_fragment == '\n':
+                    try:
+                        data_fragment = ser.read_until(
+                            expected='!').decode('ascii')
+                    except UnicodeDecodeError:
+                        await asyncio.sleep(0.0001)
+                        continue
+                    if data_fragment[-1] == '!':
                         break
-                    partial_data = partial_data + data_fragment
-                await asyncio.sleep(0.01)
-            try:
-                arduino_data = json.loads(arduino_data_recv)
-            except json.JSONDecodeError:
-                ser.reset_input_buffer()
-            await asyncio.sleep(0.01)
+                    cls.partial_data = cls.partial_data + data_fragment
+                await asyncio.sleep(0.0001)
+            if cls.partial_data:
+                try:
+                    cls.arduino_data = json.loads(cls.partial_data)
+                except json.JSONDecodeError:
+                    ser.reset_input_buffer()
+                cls.partial_data = ""
+
+            await asyncio.sleep(0.0001)
 
 
 async def main_server():
@@ -170,8 +176,10 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = ArduinoSerial.pump()
 
+        print(arduino_data)
         # if a joystick client hasn't connected yet
         if not joystick_data:
+            await asyncio.sleep(0.01)
             continue
 
         x_velocity = round(joystick_data['axes'][0] * velocity_multiplier)
@@ -223,10 +231,9 @@ async def main_server():
                 vertical_anchor = True
         prev_anchor_toggle = anchor_toggle
 
-        if arduino_data:
-            print(arduino_data)
-            if WSServer.web_client_main:
-                await WSServer.web_client_main.send(json.dumps(arduino_data))
+        print(arduino_data)
+        if WSServer.web_client_main:
+            await WSServer.web_client_main.send(json.dumps(arduino_data))
 
         await asyncio.sleep(0.01)
 
@@ -236,8 +243,8 @@ def main():
     ws_server = websockets.serve(
         WSServer.handler, "0.0.0.0", 8765, ping_interval=None)
     asyncio.ensure_future(ws_server)
-    asyncio.ensure_future(ArduinoSerial.listener())
     asyncio.ensure_future(main_server())
+    asyncio.ensure_future(ArduinoSerial.listener())
     loop.run_forever()
 
 

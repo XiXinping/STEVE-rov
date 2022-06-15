@@ -331,17 +331,21 @@ void loop() {
     imu::Vector<3> accel_vector = 
         bno.getVector(Adafruit_BNO055::VECTOR_LINEARACCEL);
 
-    /*send_doc["xa"] = accel_vector.x();*/
-    /*send_doc["ya"] = accel_vector.y();*/
+    imu::Vector<3> euler_vector =
+        bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+
+    send_doc["xa"] = accel_vector.x();
+    send_doc["ya"] = accel_vector.y();
     send_doc["za"] = accel_vector.z();
-    lcd.setCursor(1, 0);
-    lcd.print("Z Accel: ");
-    lcd.print(accel_vector.z());
-    lcd.print("    ");
+    send_doc["xe"] = euler_vector.x();
+    send_doc["ye"] = euler_vector.y();
+    send_doc["ze"] = euler_vector.z();
 
     serializeJson(send_doc, send_data_string);
-    Serial.print("\r");  // starting signal
-    Serial.println(send_data_string);
+    Serial.print("$");  // starting signal
+    Serial.print(send_data_string);
+    Serial.print("!");
+    send_data_string = "";
 
 
 
