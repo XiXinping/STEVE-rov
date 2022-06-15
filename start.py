@@ -27,8 +27,8 @@ def start_cameras():
     # ], stdout=subprocess.PIPE)
 
     usb_camera = subprocess.Popen([
-        "v4l2-ctl", "-v", "pixelformat=MJPG", "--stream-mmap", "--stream-to",
-        "-"
+        "v4l2-ctl", "-v", "pixelformat=MJPG,width=854,height=480",
+        "--stream-mmap", "--stream-to", "-"
     ], stdout=subprocess.PIPE)
 
     # mjpeg_server1 = subprocess.Popen(["raspivid_mjpeg_server", "--port",

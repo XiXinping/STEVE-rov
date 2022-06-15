@@ -340,6 +340,7 @@ void loop() {
     send_doc["xe"] = euler_vector.x();
     send_doc["ye"] = euler_vector.y();
     send_doc["ze"] = euler_vector.z();
+    send_doc["t"] = bno.getTemp();
 
     serializeJson(send_doc, send_data_string);
     Serial.print("$");  // starting signal

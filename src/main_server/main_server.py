@@ -159,7 +159,6 @@ class ArduinoSerial:
             if cls.partial_data:
                 try:
                     cls.arduino_data = json.loads(cls.partial_data)
-                    cls.send("a")
                 except json.JSONDecodeError:
                     cls.ser.reset_input_buffer()
                 cls.partial_data = ""
@@ -184,7 +183,10 @@ async def main_server():
         arduino_data = ArduinoSerial.pump()
 
         if arduino_data and WSServer.web_client_main:
-            await WSServer.web_client_main.send(json.dumps(arduino_data))
+            try:
+                await WSServer.web_client_main.send(json.dumps(arduino_data))
+            except websockets.exceptions.ConnectionClosedOK:
+                pass
         # if a joystick client hasn't connected yet
         if not joystick_data:
             await asyncio.sleep(0.01)
