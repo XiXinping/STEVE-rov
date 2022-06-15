@@ -116,21 +116,26 @@ class PID:
 class ArduinoSerial:
     arduino_data = None
     partial_data = ""
+    ser = serial.Serial("/dev/ttyACM0", timeout=0, baudrate=115200)
 
     @classmethod
     def pump(cls):
         return cls.arduino_data
 
     @classmethod
+    def send(cls, data):
+        cls.ser.write((str(data) + "\n").encode("ascii"))
+
+    @classmethod
     async def listener(cls):
-        ser = serial.Serial("/dev/ttyACM0", timeout=0, baudrate=115200)
+        # ser = serial.Serial("/dev/ttyACM0", timeout=0, baudrate=115200)
         while True:
             # wait until the starting signal is received
             while True:
-                if ser.in_waiting > 0:
+                if cls.ser.in_waiting > 0:
                     try:
                         # the starting signal is a carriage return
-                        starting_byte = ser.read_until(
+                        starting_byte = cls.ser.read_until(
                             expected='$').decode('ascii')
                     except UnicodeDecodeError:
                         await asyncio.sleep(0.0001)
@@ -140,9 +145,9 @@ class ArduinoSerial:
                 await asyncio.sleep(0.0001)
             # read the rest of the data
             while True:
-                if ser.in_waiting > 0:
+                if cls.ser.in_waiting > 0:
                     try:
-                        data_fragment = ser.read_until(
+                        data_fragment = cls.ser.read_until(
                             expected='!').decode('ascii')
                     except UnicodeDecodeError:
                         await asyncio.sleep(0.0001)
@@ -154,10 +159,12 @@ class ArduinoSerial:
             if cls.partial_data:
                 try:
                     cls.arduino_data = json.loads(cls.partial_data)
+                    cls.send("a")
                 except json.JSONDecodeError:
-                    ser.reset_input_buffer()
+                    cls.ser.reset_input_buffer()
                 cls.partial_data = ""
 
+            cls.ser.reset_input_buffer()
             await asyncio.sleep(0.0001)
 
 
@@ -176,7 +183,8 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = ArduinoSerial.pump()
 
-        print(arduino_data)
+        if arduino_data and WSServer.web_client_main:
+            await WSServer.web_client_main.send(json.dumps(arduino_data))
         # if a joystick client hasn't connected yet
         if not joystick_data:
             await asyncio.sleep(0.01)
@@ -209,8 +217,7 @@ async def main_server():
 
         # only send the data if something has change
         if arduino_commands != prev_arduino_commands:
-            arduino_commands_send = json.dumps(arduino_commands) + '\n'
-            ser.write(arduino_commands_send.encode('ascii'))
+            ArduinoSerial.send(json.dumps(arduino_commands))
             prev_arduino_commands = arduino_commands
 
         # increase or decrease speed when the dpad buttons are pressed
@@ -231,9 +238,6 @@ async def main_server():
                 vertical_anchor = True
         prev_anchor_toggle = anchor_toggle
 
-        print(arduino_data)
-        if WSServer.web_client_main:
-            await WSServer.web_client_main.send(json.dumps(arduino_data))
 
         await asyncio.sleep(0.01)
 

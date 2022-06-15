@@ -307,10 +307,10 @@ void loop() {
         if(err) {                                                                   
             Serial.print("Error: ");                                                
             Serial.println(err.c_str());
-            /*lcd.setCursor(1, 0);*/
-            /*lcd.print("Error: ");*/
-            /*lcd.setCursor(1, 1);*/
-            /*lcd.print(err.c_str());*/
+            lcd.setCursor(1, 0);
+            lcd.print("Error: ");
+            lcd.setCursor(1, 1);
+            lcd.print(err.c_str());
             return;                                                                 
         }                                                                           
         // parses data from the json document and stores them as variables          
