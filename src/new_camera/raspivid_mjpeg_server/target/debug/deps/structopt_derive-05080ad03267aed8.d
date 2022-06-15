@@ -1,0 +1,10 @@
+/home/random/Projects/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/libstructopt_derive-05080ad03267aed8.so: /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/lib.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/attrs.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/doc_comments.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/parse.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/spanned.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/ty.rs
+
+/home/random/Projects/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/structopt_derive-05080ad03267aed8.d: /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/lib.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/attrs.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/doc_comments.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/parse.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/spanned.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/ty.rs
+
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/lib.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/attrs.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/doc_comments.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/parse.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/spanned.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/structopt-derive-0.4.7/src/ty.rs:

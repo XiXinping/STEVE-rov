@@ -41,6 +41,14 @@
             .text {
                 margin-bottom: 1em;
             }
+            #sensor-table {
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+            }
+            .sensor-cell {
+                width: 15%;
+            }
         </style>
     </head>
     <body>
@@ -63,11 +71,21 @@
         </div>
         <div id="Sensor-Data">
             <h2>Sensor Data</h2>
-            <p id="temperature-tag" class="text">Temperature: </p>
-            <p id="x-accel-tag" class="text">X Acceleration: </p>
-            <p id="y-accel-tag" class="text">Y Acceleration: </p>
-            <p id="z-accel-tag" class="text">Z Acceleration: </p>
+            <table id="sensor-table">
+                <tr>
+                    <th class="sensor-cell">Temperature:</th>
+                    <th class="sensor-cell">X Acceleration:</th>
+                    <th class="sensor-cell">Y Acceleration:</th>
+                    <th class="sensor-cell">Z Acceleration:</th>
+                </tr>
+                <tr class="sensor-table">
+                    <td id="temperature-tag" class="sensor-cell"></td>
+                    <td id="x-accel-tag" class="sensor-cell"></td>
+                    <td id="y-accel-tag" class="sensor-cell"></td>
+                    <td id="z-accel-tag" class="sensor-cell"></td>
+                </tr>
+            </table>
         </div>
-    <script src="web_client.js">
+    <script src="web_client.js"></script>
     </body>
 </html>

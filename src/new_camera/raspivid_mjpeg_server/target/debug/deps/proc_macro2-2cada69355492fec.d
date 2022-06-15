@@ -1,0 +1,11 @@
+/home/random/Projects/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/proc_macro2-2cada69355492fec.rmeta: /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/lib.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/strnom.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/detection.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/fallback.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/wrapper.rs
+
+/home/random/Projects/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/libproc_macro2-2cada69355492fec.rlib: /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/lib.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/strnom.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/detection.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/fallback.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/wrapper.rs
+
+/home/random/Projects/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/proc_macro2-2cada69355492fec.d: /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/lib.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/strnom.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/detection.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/fallback.rs /home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/wrapper.rs
+
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/lib.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/strnom.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/detection.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/fallback.rs:
+/home/random/.cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.12/src/wrapper.rs:
