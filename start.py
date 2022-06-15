@@ -21,22 +21,22 @@ def start_main_server():
 
 
 def start_cameras():
-    # rpi_camera = subprocess.Popen([
-        # "raspivid", "-ISO", "0", "-t", "0", "-n", "-o", "-", "-w", "960", "-h",
-        # "540", "-fps", "60", "-b", "25000000", "-cd", "MJPEG"
-    # ], stdout=subprocess.PIPE)
+    rpi_camera = subprocess.Popen([
+        "raspivid", "-ISO", "0", "-t", "0", "-n", "-o", "-", "-w", "960", "-h",
+        "540", "-fps", "60", "-b", "25000000", "-cd", "MJPEG"
+    ], stdout=subprocess.PIPE)
 
     usb_camera = subprocess.Popen([
         "v4l2-ctl", "-v", "pixelformat=MJPG,width=854,height=480",
         "--stream-mmap", "--stream-to", "-"
     ], stdout=subprocess.PIPE)
 
-    # mjpeg_server1 = subprocess.Popen(["raspivid_mjpeg_server", "--port",
-                                     # "9876"], stdin=rpi_camera.stdout)
+    mjpeg_server1 = subprocess.Popen(["raspivid_mjpeg_server", "--port",
+                                     "9876"], stdin=rpi_camera.stdout)
 
     mjpeg_server2 = subprocess.Popen(["raspivid_mjpeg_server", "--port",
                                       "9877"], stdin=usb_camera.stdout)
-    return (usb_camera, mjpeg_server2)
+    return (rpi_camera, usb_camera, mjpeg_server1, mjpeg_server2)
 
 
 def main():
@@ -56,16 +56,16 @@ def main():
     time.sleep(0.5)
 
     print("Running camera code:")
-    usb_camera, mjpeg_server2 = start_cameras()
+    rpi_camera, usb_camera, mjpeg_server1, mjpeg_server2 = start_cameras()
 
     while True:
         try:
             time.sleep(0.01)
         except KeyboardInterrupt:
             main_server.terminate()
-            # rpi_camera.terminate()
+            rpi_camera.terminate)
             usb_camera.terminate()
-            # mjpeg_server1.terminate()
+            mjpeg_server1.terminate()
             mjpeg_server2.terminate()
             return
 
