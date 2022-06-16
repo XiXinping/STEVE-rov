@@ -23,8 +23,8 @@ const int grab_motor_pos = 3;   //blue/in3/out3
 const int grab_motor_neg = 4;   //green/in4/out4
 const int spin_motor_pos = 11;  //in1/red
 const int spin_motor_neg = 10;  //in2/black
-const int grab_current_control = 5; //ENB !needs to be capable of analog
-const int spin_current_control = 6; //ENA !needs to be capable of analog
+const int grab_current_control = 5; // ENB !needs to be capable of analog
+const int spin_current_control = 6; // ENA !needs to be capable of analog
 
 int x_velocity = 0;
 int y_velocity = 0;
@@ -38,10 +38,22 @@ uint8_t speed_limits[] = {64, 64, 64, 64, 64, 64};
 uint8_t speed_mins[] = {0, 0, 0, 0, 0, 0};
 
 // used to compute a rolling average of the acceleration
-float x_accel_values = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-float y_accel_values = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-float z_accel_values = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float x_accel_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float y_accel_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float z_accel_values[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 uint8_t rolling_count = 0;
+
+String receive_data = ""; // data received from serial
+String send_data = "";  // data to be send over serial
+
+float average(float input_array[], float array_len) {
+    float total = 0;
+    for (int i = 0; i < array_len; i++) {
+        total += input_array[i];
+    }
+
+    return total / (float) array_len;
+}
 
 void rotate_gripper(int8_t rotate_direction) {
     switch(rotate_direction) {
@@ -98,7 +110,7 @@ void fire_motor(int motor_num, int velocity) {
 }
 
 // move the robot left or right
-void move_x(int8_t velocity, int16_t* motor_velocities) {
+void calc_x(int8_t velocity, int16_t* motor_velocities) {
     // if the velocity is positive, the robot will move right, if the
     // velocity is negative, the robot will move left
     motor_velocities[0] += -velocity; // top left motor should fire backwards
@@ -108,17 +120,17 @@ void move_x(int8_t velocity, int16_t* motor_velocities) {
 }
 
 // move the robot forward or backward
-void move_y(int8_t velocity, int16_t *motor_velocities) {
+void calc_y(int8_t velocity, int16_t *motor_velocities) {
     // positive velocity makes the robot move forward, negative velocity makes
     // the robot move backward
     motor_velocities[0] += -velocity;
-    motor_velocities[1] += -velociy;
+    motor_velocities[1] += -velocity;
     motor_velocities[2] += velocity;
     motor_velocities[3] += velocity;
 }
 
 // move the robot up or down
-void move_z(int8_t velocity, int16_t* motor_velocities) {
+void calc_z(int8_t velocity, int16_t* motor_velocities) {
     // positive velocity makes the robot move up, negative velocity makes the
     // robot move down
     motor_velocities[4] += velocity;
@@ -126,7 +138,7 @@ void move_z(int8_t velocity, int16_t* motor_velocities) {
 }
 
 // turn the robot left or right
-void yaw(int8_t velocity, int16_t* motor_velocities) {
+void calc_yaw(int8_t velocity, int16_t* motor_velocities) {
     // positive velocity makes the robot turn right, negative velocity makes
     // the robot turn left
     motor_velocities[0] += -velocity;
@@ -138,10 +150,10 @@ void yaw(int8_t velocity, int16_t* motor_velocities) {
 void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity,
         int8_t yaw_velocity, uint8_t speed_limits[]) {
     int16_t motor_velocities[] = {0, 0, 0, 0, 0, 0};
-    move_x(x_velocity, motor_velocities);
-    move_y(y_velocity, motor_velocities);
-    move_z(z_velocity, motor_velocities);
-    yaw(yaw_velocity, motor_velocities);
+    calc_x(x_velocity, motor_velocities);
+    calc_y(y_velocity, motor_velocities);
+    calc_z(z_velocity, motor_velocities);
+    calc_yaw(yaw_velocity, motor_velocities);
 
     for (uint8_t i = 0; i < 6; i++) {
         // prevent the motors from revving too quickly and drawing too much current
@@ -231,8 +243,6 @@ void print_velocities(int x_velocity, int y_velocity, int z_velocity,
     lcd.print("    ");
 }
 
-String receive_data = "";
-String send_data_string = "\r";
 
 
 void setup() {
@@ -302,16 +312,7 @@ void loop() {
         // creates a json document on the stack                                     
         StaticJsonDocument<256> receive_doc;                                            
  
-        DeserializationError err = deserializeJson(receive_doc, receive_data);                
-        if(err) {                                                                   
-            Serial.print("Error: ");                                                
-            Serial.println(err.c_str());
-            lcd.setCursor(1, 0);
-            lcd.print("Error: ");
-            lcd.setCursor(1, 1);
-            lcd.print(err.c_str());
-            return;                                                                 
-        }                                                                           
+        deserializeJson(receive_doc, receive_data);                
         // parses data from the json document and stores them as variables          
         x_velocity = receive_doc["x"];
         y_velocity = receive_doc["y"];
@@ -333,10 +334,19 @@ void loop() {
     imu::Vector<3> euler_vector =
         bno.getVector(Adafruit_BNO055::VECTOR_EULER);
 
-    x_accel_values[accel_count] = accel_vector.x();
-    y_accel_values[accel_count] = accel_vector.y();
-    z_accel_values[accel_count] = accel_vector.z();
+    // store the last ten accelerometer values
+    x_accel_values[rolling_count] = accel_vector.x();
+    y_accel_values[rolling_count] = accel_vector.y();
+    z_accel_values[rolling_count] = accel_vector.z();
 
+    if(rolling_count >= 10) {
+        rolling_count = 0;
+    } else {
+        rolling_count++;
+    }
+
+    // compute a rolling average of the accleration values to filter out noise
+    lcd.setCursor(0, 0);
     send_doc["xa"] = accel_vector.x();
     send_doc["ya"] = accel_vector.y();
     send_doc["za"] = accel_vector.z();
@@ -345,17 +355,16 @@ void loop() {
     send_doc["ze"] = euler_vector.z();
     send_doc["t"] = bno.getTemp();
 
-    serializeJson(send_doc, send_data_string);
+    serializeJson(send_doc, send_data);
     Serial.print("$");  // starting signal
-    Serial.print(send_data_string);
+    Serial.print(send_data);
     Serial.print("!");
-    send_data_string = "";
+    send_data = "";
 
 
 
     drive_motors(x_velocity, y_velocity, z_velocity, yaw_velocity, speed_limits);
     drive_gripper(grab);
     rotate_gripper(rotate_direction);
-    /*print_velocities(x_velocity, y_velocity, z_velocity, yaw_velocity);*/
     delay(10);
 }

@@ -182,6 +182,7 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = ArduinoSerial.pump()
 
+        print(arduino_data)
         if arduino_data and WSServer.web_client_main:
             try:
                 await WSServer.web_client_main.send(json.dumps(arduino_data))

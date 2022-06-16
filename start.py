@@ -63,7 +63,7 @@ def main():
             time.sleep(0.01)
         except KeyboardInterrupt:
             main_server.terminate()
-            rpi_camera.terminate)
+            rpi_camera.terminate()
             usb_camera.terminate()
             mjpeg_server1.terminate()
             mjpeg_server2.terminate()
