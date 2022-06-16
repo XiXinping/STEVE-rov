@@ -37,6 +37,12 @@ int8_t rotate_direction = 0;   //spin right
 uint8_t speed_limits[] = {64, 64, 64, 64, 64, 64};
 uint8_t speed_mins[] = {0, 0, 0, 0, 0, 0};
 
+// used to compute a rolling average of the acceleration
+float x_accel_values = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float y_accel_values = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+float z_accel_values = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+uint8_t rolling_count = 0;
+
 void rotate_gripper(int8_t rotate_direction) {
     switch(rotate_direction) {
         case -1:  // rotate left
@@ -58,13 +64,6 @@ void rotate_gripper(int8_t rotate_direction) {
 }
 
 void drive_gripper(int8_t grab) {
-    /*if (grab) {  // close the gripper*/
-        /*digitalWrite(grab_motor_pos, HIGH);*/
-        /*digitalWrite(grab_motor_neg, LOW);*/
-    /*} else {  // open the gripper*/
-        /*digitalWrite(grab_motor_pos, LOW);*/
-        /*digitalWrite(grab_motor_neg, HIGH);*/
-    /*}*/
     switch(grab) {
         case -1:  // open the claw
             digitalWrite(grab_motor_pos, HIGH);
@@ -113,7 +112,7 @@ void move_y(int8_t velocity, int16_t *motor_velocities) {
     // positive velocity makes the robot move forward, negative velocity makes
     // the robot move backward
     motor_velocities[0] += -velocity;
-    motor_velocities[1] += -velocity;
+    motor_velocities[1] += -velociy;
     motor_velocities[2] += velocity;
     motor_velocities[3] += velocity;
 }
@@ -333,6 +332,10 @@ void loop() {
 
     imu::Vector<3> euler_vector =
         bno.getVector(Adafruit_BNO055::VECTOR_EULER);
+
+    x_accel_values[accel_count] = accel_vector.x();
+    y_accel_values[accel_count] = accel_vector.y();
+    z_accel_values[accel_count] = accel_vector.z();
 
     send_doc["xa"] = accel_vector.x();
     send_doc["ya"] = accel_vector.y();

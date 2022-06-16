@@ -18,8 +18,7 @@ main_ws.onmessage = function (event) {
     var sensor_data = JSON.parse(event.data);
     console.log(`Sensor Data: ${sensor_data}`);
 
-    temperature_tag.innerText = `Temperature:\
-    ${sensor_data.t}°C`;
+    temperature_tag.innerText = `${sensor_data.t}°C`;
     x_accel_tag.innerText = `${sensor_data.xa}m/s^2`;
     y_accel_tag.innerText = `${sensor_data.ya}m/s^2`;
     z_accel_tag.innerText = `${sensor_data.za}m/s^2`;
