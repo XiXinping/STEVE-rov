@@ -22,8 +22,8 @@ def start_main_server():
 
 def start_cameras():
     rpi_camera = subprocess.Popen([
-        "raspivid", "-ISO", "0", "-t", "0", "-n", "-o", "-", "-w", "960", "-h",
-        "540", "-fps", "60", "-b", "25000000", "-cd", "MJPEG"
+        "raspivid", "-ISO", "0", "-t", "0", "-n", "-o", "-", "-w", "640", "-h",
+        "480", "-fps", "60", "-b", "25000000", "-cd", "MJPEG"
     ], stdout=subprocess.PIPE)
 
     usb_camera = subprocess.Popen([

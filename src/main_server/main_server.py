@@ -182,7 +182,6 @@ async def main_server():
         joystick_data = WSServer.pump_joystick_data()
         arduino_data = ArduinoSerial.pump()
 
-        print(arduino_data)
         if arduino_data and WSServer.web_client_main:
             try:
                 await WSServer.web_client_main.send(json.dumps(arduino_data))
@@ -241,7 +240,6 @@ async def main_server():
                 vertical_anchor = True
         prev_anchor_toggle = anchor_toggle
 
-
         await asyncio.sleep(0.01)
 
 
@@ -260,4 +258,3 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print('')
-
