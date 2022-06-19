@@ -197,9 +197,10 @@ async def main_server():
         # reverses this so up is 1 and down is -1
         y_velocity = round(-joystick_data['axes'][1] * velocity_multiplier)
         z_velocity = round(-joystick_data['axes'][3]
-                           * velocity_multiplier)
+                           * 64)
         yaw_velocity = round(joystick_data['axes'][2]
                              * velocity_multiplier)
+        roll_velocity = round(joystick_data['dpad'][0]) * velocity_multiplier
         # light = bool(joystick_data['button_values'][0])
         gripper_grab = joystick_data['buttons'][7] - \
             joystick_data['buttons'][6]
@@ -211,11 +212,12 @@ async def main_server():
 
         arduino_commands = {
             "x": x_velocity, "y": y_velocity, "z": z_velocity,
-            "w": yaw_velocity, "g": gripper_grab, "r": gripper_rotate
+            "w": yaw_velocity, "R": roll_velocity, "g": gripper_grab,
+            "r": gripper_rotate
         }
-        if vertical_anchor:
-            arduino_commands["y"] = vertical_pid.compute(
-                arduino_data["z_accel"])
+        # if vertical_anchor:
+        # arduino_commands["y"] = vertical_pid.compute(
+        # arduino_data["z_accel"])
 
         # only send the data if something has change
         if arduino_commands != prev_arduino_commands:

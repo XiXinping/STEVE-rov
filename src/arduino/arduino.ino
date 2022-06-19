@@ -15,6 +15,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55);
 #define USMIN 1100 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
 #define USMAX 1900 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+#define MAX_SPEED 64 // maximum motor speed to avoid current spikes
 
 int8_t minIn = -127;  //the minimum input value for the motor speed
 int8_t maxIn = 127; //the maximum input value for the motor speed
@@ -30,6 +31,7 @@ int x_velocity = 0;
 int y_velocity = 0;
 int z_velocity = 0;
 int yaw_velocity = 0;
+int roll_velocity = 0;
 int8_t grab = 0; // grab toggle
 int8_t rotate_direction = 0;   //spin right
 
@@ -46,8 +48,8 @@ uint8_t rolling_count = 0;
 String receive_data = ""; // data received from serial
 String send_data = "";  // data to be send over serial
 
-float average(double input_array[], int array_len) {
-    double total = 0;
+float average(float input_array[], float array_len) {
+    float total = 0;
     for (int i = 0; i < array_len; i++) {
         total += input_array[i];
     }
@@ -147,13 +149,21 @@ void calc_yaw(int8_t velocity, int16_t* motor_velocities) {
     motor_velocities[3] += -velocity;
 }
 
+void calc_roll(int8_t velocity, int16_t* motor_velocities) {
+    // positive velocity makes the robot move up, negative velocity makes the
+    // robot move down
+    motor_velocities[4] -= velocity;
+    motor_velocities[5] += velocity;
+}
+
 void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity,
-        int8_t yaw_velocity, uint8_t speed_limits[]) {
+        int8_t yaw_velocity, int8_t roll_velocity, uint8_t speed_limits[]) {
     int16_t motor_velocities[] = {0, 0, 0, 0, 0, 0};
     calc_x(x_velocity, motor_velocities);
     calc_y(y_velocity, motor_velocities);
     calc_z(z_velocity, motor_velocities);
     calc_yaw(yaw_velocity, motor_velocities);
+    calc_roll(roll_velocity, motor_velocities);
 
     for (uint8_t i = 0; i < 6; i++) {
         // prevent the motors from revving too quickly and drawing too much current
@@ -183,23 +193,23 @@ void drive_motors(int8_t x_velocity, int8_t y_velocity, int8_t z_velocity,
             /*}*/
 
         /*}*/
-        /*// if the motor speed falls below half speed, reset the speed limit*/
-        /*// to prevent it from being able to accelerate freely*/
-        /*if (abs(motor_velocities[i]) < 32) {*/
-            /*speed_limits[i] = 32;*/
-        /*}*/
-        /*if (abs(motor_velocities[i]) > 32) {*/
-            /*speed_mins[i] = 32;*/
-        /*}*/
+        // if the motor speed falls below half speed, reset the speed limit
+        // to prevent it from being able to accelerate freely
+        if (abs(motor_velocities[i]) < 32) {
+            speed_limits[i] = 32;
+        }
+        if (abs(motor_velocities[i]) > 64) {
+            speed_mins[i] = 64;
+        }
 
     }
 
     // make sure the motor speeds don't exceed the limit of the PWM
     for (uint8_t i = 0; i < 6; i++) {
-        if (motor_velocities[i] > 127) {
-            motor_velocities[i] = 127;
-        } else if (motor_velocities[i] < -127) {
-            motor_velocities[i] = -127;
+        if (motor_velocities[i] > MAX_SPEED) {
+            motor_velocities[i] = MAX_SPEED;
+        } else if (motor_velocities[i] < -MAX_SPEED) {
+            motor_velocities[i] = -MAX_SPEED;
         }
 
         // below an eigth of the max speed, the motors don't really respond
@@ -318,6 +328,7 @@ void loop() {
         y_velocity = receive_doc["y"];
         z_velocity = receive_doc["z"];
         yaw_velocity = receive_doc["w"];
+        roll_velocity = receive_doc["R"];
         grab = receive_doc["g"];
         rotate_direction = receive_doc["r"];
 
@@ -346,6 +357,7 @@ void loop() {
     }
 
     // compute a rolling average of the accleration values to filter out noise
+    lcd.setCursor(0, 0);
     send_doc["xa"] = accel_vector.x();
     send_doc["ya"] = accel_vector.y();
     send_doc["za"] = accel_vector.z();
@@ -354,15 +366,15 @@ void loop() {
     send_doc["ze"] = euler_vector.z();
     send_doc["t"] = bno.getTemp();
 
-    /*serializeJson(send_doc, send_data);*/
-    /*Serial.print("$");  // starting signal*/
-    /*Serial.print(send_data);*/
-    /*Serial.print("!");*/
-    /*send_data = "";*/
+    serializeJson(send_doc, send_data);
+    Serial.print("$");  // starting signal
+    Serial.print(send_data);
+    Serial.print("!");
+    send_data = "";
 
 
 
-    drive_motors(x_velocity, y_velocity, z_velocity, yaw_velocity, speed_limits);
+    drive_motors(x_velocity, y_velocity, z_velocity, yaw_velocity, roll_velocity, speed_limits);
     drive_gripper(grab);
     rotate_gripper(rotate_direction);
     delay(10);
