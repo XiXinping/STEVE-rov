@@ -1,0 +1,11 @@
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/unicode_segmentation-b7e985e5408ecbe4.rmeta: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/grapheme.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/tables.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/word.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/sentence.rs
+
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/libunicode_segmentation-b7e985e5408ecbe4.rlib: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/grapheme.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/tables.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/word.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/sentence.rs
+
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/unicode_segmentation-b7e985e5408ecbe4.d: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/grapheme.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/tables.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/word.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/sentence.rs
+
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/lib.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/grapheme.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/tables.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/word.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/unicode-segmentation-1.6.0/src/sentence.rs:

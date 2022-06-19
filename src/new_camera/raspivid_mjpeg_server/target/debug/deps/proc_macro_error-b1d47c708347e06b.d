@@ -1,0 +1,11 @@
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/proc_macro_error-b1d47c708347e06b.rmeta: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/dummy.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/diagnostic.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/macros.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/imp/fallback.rs
+
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/libproc_macro_error-b1d47c708347e06b.rlib: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/dummy.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/diagnostic.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/macros.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/imp/fallback.rs
+
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/proc_macro_error-b1d47c708347e06b.d: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/dummy.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/diagnostic.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/macros.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/imp/fallback.rs
+
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/lib.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/dummy.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/diagnostic.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/macros.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/proc-macro-error-1.0.2/src/imp/fallback.rs:

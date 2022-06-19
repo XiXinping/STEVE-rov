@@ -1,0 +1,13 @@
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/quote-b898802bcb830be0.rmeta: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ext.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/format.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ident_fragment.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/to_tokens.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/runtime.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/spanned.rs
+
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/libquote-b898802bcb830be0.rlib: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ext.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/format.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ident_fragment.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/to_tokens.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/runtime.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/spanned.rs
+
+/home/pi/STEVE-rov/src/new_camera/raspivid_mjpeg_server/target/debug/deps/quote-b898802bcb830be0.d: /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/lib.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ext.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/format.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ident_fragment.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/to_tokens.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/runtime.rs /home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/spanned.rs
+
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/lib.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ext.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/format.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/ident_fragment.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/to_tokens.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/runtime.rs:
+/home/pi/.cargo/registry/src/github.com-1285ae84e5963aae/quote-1.0.4/src/spanned.rs:
